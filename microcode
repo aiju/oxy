@@ -1,0 +1,3 @@
+* {
+	0: OB=D IB=D ALU=B ABL=PCL ABH=PCH PC+1 FETCH
+}
