@@ -19,6 +19,7 @@ enum {
 	FLAGS = 32,
 	FETCH = 42,
 	NEXT = 43,
+	C1 = 48,
 };
 
 bits bt[] = {
@@ -85,6 +86,13 @@ bits bt[] = {
 	"N=1", 2<<8, FLAGS,
 	"N=0", 3<<8, FLAGS,
 	"FETCH", 1, FETCH,
+	"C1=0", 0, C1,
+	"C1=C", 1, C1,
+	"C1=Z", 2, C1,
+	"C1=I", 3, C1,
+	"C1=V", 4, C1,
+	"C1=N", 5, C1,
+	"C1=ALUC", 6, C1,
 	NULL, 0, 0,
 };
 
@@ -94,8 +102,8 @@ typedef struct {
 
 fixed fixeds[] = {
 	8, 9,
-	4, 5,
-	2, 3,
+	5, 4,
+	2, 2,
 	0, 0,
 };
 
@@ -172,7 +180,7 @@ int main()
 			}
 		}
 		for(u = 0; u < 1<<17; u++){
-			if((u & ~any) == cur)
+			if((u & ~any) == (cur & ~any))
 				rom[u] = val;
 		}
 	}
@@ -184,32 +192,36 @@ int main()
 		err(1, "fopen");
 	fprintf(fl, "v2.0 raw\n");
 	fprintf(fu, "v2.0 raw\n");
-	for(u = 0; u < 1<<17; u++){
+	ol = rom[0];
+	ou = rom[0] >> 32;
+	nl = nu = 1;
+	for(u = 1; u < 1<<17; u++){
 		if((uint32_t)rom[u] != ol){
 			if(nl != 1)
-				fprintf(fl, "%d*%.8u\n", nl, ol);
+				fprintf(fl, "%d*%.8x\n", nl, ol);
 			else
-				fprintf(fl, "%.8u\n", ol);
+				fprintf(fl, "%.8x\n", ol);
 			ol = rom[u];
 			nl = 1;
 		}else
 			nl++;
-		if(rom[u] >> 32 != ou){
+		if(rom[u] >> 32 != ou || u == 0){
 			if(nu != 1)
-				fprintf(fu, "%d*%.8u\n", nu, ou);
+				fprintf(fu, "%d*%.8x\n", nu, ou);
 			else
-				fprintf(fu, "%.8u\n", ou);
+				fprintf(fu, "%.8x\n", ou);
 			ou = rom[u] >> 32;
 			nu = 1;
 		}else
 			nu++;
 	}
 	if(nl != 1)
-		fprintf(fl, "%d*%.8u\n", nl, ol);
+		fprintf(fl, "%d*%.8x\n", nl, ol);
 	else
-		fprintf(fl, "%.8u\n", ol);
+		fprintf(fl, "%.8x\n", ol);
 	if(nu != 1)
-		fprintf(fl, "%d*%.8u\n", nu, ou);
+		fprintf(fu, "%d*%.8x\n", nu, ou);
 	else
-		fprintf(fl, "%.8u\n", ou);
+		fprintf(fu, "%.8x\n", ou);
+	return 0;
 }
