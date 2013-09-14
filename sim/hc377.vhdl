@@ -21,14 +21,14 @@ begin
   begin
     wait until rising_edge(clk);
     assert e'stable(tsu) report "'377 setup time (enable) violation" severity warning;
-    assert e <> '0' or d'stable(tsu) report "'377 setup time (data) violation" severity warning;
+    assert e /= '0' or d'stable(tsu) report "'377 setup time (data) violation" severity warning;
   end process;
   
   process
   begin
     wait until rising_edge(clk);
     wait for thd;
-    assert e <> '0' or d'stable(thd) report "'377 hold time (data) violation" severity warning;
+    assert e /= '0' or d'stable(thd) report "'377 hold time (data) violation" severity warning;
   end process;
   
   process
