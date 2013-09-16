@@ -15,38 +15,25 @@ architecture main of hc377 is
   constant thd : time := 3 ns; -- hold time (data)
   constant the : time := 5 ns; -- hold time (enable)
   constant tp : time := 30 ns; -- prop. delay
-  signal v: std_logic_vector(7 downto 0);
+  signal v: std_logic_vector(7 downto 0) := X"FF";
 begin
   process
   begin
     wait until rising_edge(clk);
     assert e'stable(tsu) report "'377 setup time (enable) violation" severity warning;
-    assert e /= '0' or d'stable(tsu) report "'377 setup time (data) violation" severity warning;
+    if e = '0' then
+      assert d'stable(tsu) report "'377 setup time (data) violation" severity warning;
+      v <= d after tp;
+      wait for thd;
+      assert e /= '0' or d'stable(thd) report "'377 hold time (data) violation" severity warning;
+    end if;
   end process;
-  
-  process
-  begin
-    wait until rising_edge(clk);
-    wait for thd;
-    assert e /= '0' or d'stable(thd) report "'377 hold time (data) violation" severity warning;
-  end process;
-  
+
   process
   begin
     wait until rising_edge(clk);
     wait for the;
     assert e'stable(the) report "'377 hold time (enable) violation" severity warning;
-  end process;
-  
-  process
-    variable vv: std_logic_vector(7 downto 0);
-  begin
-    wait until rising_edge(clk);
-    if e = '0' then
-      vv := d;
-      wait for tp;
-      v <= vv;
-    end if;
   end process;
   
   q <= v;

@@ -8,6 +8,7 @@ entity datapath is
     db : inout std_logic_vector(7 downto 0);
     abl, abh : out std_logic_vector(7 downto 0);
     ibs, obs : in std_logic_vector(3 downto 0);
+    abls, abhs : in std_logic_vector(2 downto 0);
     pcp : in std_logic
   );
 end datapath;
@@ -26,6 +27,8 @@ architecture main of datapath is
 begin
   ibdec : entity hc154 port map('0', '0', ibs, ibd);
   obdec : entity hc154 port map('0', '0', obs, obd);
+  abldec : entity hc138 port map('1', '0', '0', abls, abld);
+  abhdec : entity hc138 port map('1', '0', '0', abhs, abhd);
   
   areg : entity hc377 port map(clk, obd(1), ob, areg_q);
   xreg : entity hc377 port map(clk, obd(2), ob, xreg_q);
@@ -64,4 +67,6 @@ begin
   oneahbuf : entity hc244 port map(abhd(2), X"01", abh);
   zeroahbuf : entity hc244 port map(abhd(3), X"00", abh);
   ffahbuf : entity hc244 port map(abhd(4), X"FF", abh);
+    
+  db <= (others => 'Z');
 end main;

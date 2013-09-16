@@ -22,8 +22,7 @@ begin
     if g1 = '0' and g2 = '0' then
       vv(to_integer(unsigned(a))) := '0';
     end if;
-    wait for tp;
-    v <= vv;
+    v <= vv after tp;
   end process;
   
   q <= v;

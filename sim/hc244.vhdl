@@ -20,21 +20,16 @@ begin
   begin
     wait until e'event;
     if e = '0' then
-      wait for ten;
-      st <= '1';
+      st <= '1' after ten;
     else
-      wait for tdi;
-      st <= '0';
+      st <= '0' after tdi;
     end if;
   end process;
   
   process
-    variable vv: std_logic_vector(7 downto 0);
   begin
     wait until a'event;
-    vv := a;
-    wait for tp;
-    v <= vv;
+    v <= a after tp;
   end process;
   
   y <= v when st = '1' else (others => 'Z');

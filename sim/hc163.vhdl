@@ -15,11 +15,10 @@ architecture main of hc163 is
   constant tsu : time := 12 ns;
   constant th : time := 3 ns;
   constant tp : time := 15 ns;
-  signal v : std_logic_vector(3 downto 0);
+  signal v : std_logic_vector(3 downto 0) := X"0";
   signal tcv : std_logic := '0';
 begin
   process
-    variable vv : std_logic_vector(3 downto 0);
   begin
     wait until rising_edge(clk);
     assert reset'stable(tsu) report "'163 reset setup time violation" severity warning;
@@ -27,24 +26,17 @@ begin
     assert te'stable(tsu) report "'163 te setup time violation" severity warning;
     assert load'stable(tsu) report "'163 load setup time violation" severity warning;
     if reset = '0' then
-      vv := X"0";
+      v <= X"0" after tp;
     elsif load = '0' then
       assert d'stable(tsu) report "'163 data setup time violation" severity warning;
-      vv := d;
+      v <= d after tp;
     elsif pe = '1' and te = '1' then
-      vv := std_logic_vector(unsigned(v) + 1);
-    end if;
-    wait for tp;
-    v <= vv;
-    if te = '1' and vv = X"F" then
-      tcv <= '1';
-    else
-      tcv <= '0';
+      v <= std_logic_vector(unsigned(v) + 1) after tp;
     end if;
   end process;
   
   q <= v;
-  tc <= tcv;
+  tc <= '1' when te = '1' and v = X"F" else '0';
   
   process
   begin

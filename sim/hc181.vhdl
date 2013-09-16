@@ -63,8 +63,7 @@ begin
     when "11111" => ff := aa;
     when others => ff := (others => 'X');
     end case;
-    wait for tp;
-    f <= std_logic_vector(ff(3 downto 0));
-    cout <= not ff(4);
+    f <= std_logic_vector(ff(3 downto 0)) after tp;
+    cout <= not ff(4) after tp;
   end process;
 end main;

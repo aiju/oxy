@@ -1,6 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdint.h>
-#include <err.h>
+#include <stdarg.h>
 
 typedef struct {
 	char *s;
@@ -9,17 +10,17 @@ typedef struct {
 } bits;
 
 enum {
-	ALU = 0,
-	IB = 6,
-	CIN = 10,
-	ABL = 12,
-	PCP = 15,
-	OB = 16,
-	ABH = 20,
-	FLAGS = 32,
-	FETCH = 42,
-	NEXT = 43,
-	C1 = 48,
+	IB = 0,		/* 4 */
+	OB = 4,		/* 4 */
+	ALU = 8,	/* 6 */
+	CIN = 14,	/* 2 */
+	ABL = 16,	/* 3 */
+	ABH = 19,	/* 3 */
+	PCP = 22,	/* 1 */
+	FLAGS = 32,	/* 10 */
+	NEXT = 48,	/* 4 */
+	C1 = 52,	/* 4 */
+	FETCH = 56,	/* 1 */
 };
 
 bits bt[] = {
@@ -102,10 +103,22 @@ typedef struct {
 
 fixed fixeds[] = {
 	8, 9,
-	5, 4,
+	1, 8,
+	4, 4,
 	2, 2,
 	0, 0,
 };
+
+void
+fatal(char *msg, ...)
+{
+	va_list va;
+	
+	va_start(va,  msg);
+	vfprintf(stderr, msg, va);
+	va_end(va);
+	exit(1);
+}
 
 bits *
 lookup(char *n)
@@ -115,7 +128,7 @@ lookup(char *n)
 	for(b = bt; b->s != NULL; b++)
 		if(strcmp(b->s, n) == 0)
 			return b;
-	errx(1, "unknown bit %s", n);
+	fatal("unknown bit %s", n);
 }
 
 uint64_t rom[1<<17];
@@ -146,11 +159,11 @@ int main()
 				*p++ = 0;
 				while(isspace(*p))
 					p++;
-				if(*p != 0){
-					if(g == f + sizeof(f)/sizeof(*f))
-						errx(1, "too many fields in line");
-					*g++ = p;
-				}
+				if(*p == 0)
+					break;
+				if(g == f + sizeof(f)/sizeof(*f))
+					fatal("too many fields in line");
+				*g++ = p;
 			}
 
 		h = f;
@@ -159,13 +172,13 @@ int main()
 		val = 0;
 		for(ff = fixeds; ff->w != 0; ff++){
 			if(h == g)
-				errx(1, "not enough fields in line");
+				fatal("not enough fields in line");
 			if(strcmp(*h, "*") == 0)
 				any |= (((uint64_t)1<<ff->w)-1)<<ff->sh;
 			else{
 				cur |= (uint64_t)strtol(*h, &p, 0)<<ff->sh;
 				if(*p != 0)
-					errx(1, "invalid number %s", *h);
+					fatal("invalid number %s", *h);
 			}
 			h++;
 		}
@@ -173,7 +186,7 @@ int main()
 			if(strncmp(*h, "->", 2) == 0){
 				val |= (uint64_t)strtol(*h + 2, &p, 0) << NEXT;
 				if(*p != 0)
-					errx(1, "invalid number %s", *h + 2);
+					fatal("invalid number %s", *h + 2);
 			}else{
 				b = lookup(*h);
 				val |= (uint64_t)b->p << b->sh;
@@ -184,12 +197,13 @@ int main()
 				rom[u] = val;
 		}
 	}
+/*
 	fl = fopen("rom0", "w");
 	if(fl == NULL)
-		err(1, "fopen");
+		fatal("fopen");
 	fu = fopen("rom1", "w");
 	if(fu == NULL)
-		err(1, "fopen");
+		fatal("fopen");
 	fprintf(fl, "v2.0 raw\n");
 	fprintf(fu, "v2.0 raw\n");
 	ol = rom[0];
@@ -223,5 +237,11 @@ int main()
 		fprintf(fu, "%d*%.8x\n", nu, ou);
 	else
 		fprintf(fu, "%.8x\n", ou);
+*/
+	fl = fopen("rom", "wb");
+	if(fl == NULL)
+		fatal("fopen");
+	fwrite(rom, sizeof(*rom), 1<<17, fl);
+	fclose(fl);
 	return 0;
 }
