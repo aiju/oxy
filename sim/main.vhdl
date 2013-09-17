@@ -17,12 +17,6 @@ architecture main of main is
 begin
   process
   begin
-    wait for 1 ns;
-    microaddr(8) <= '1';
-  end process;
-  
-  process
-  begin
     clk <= '1';
     wait for 500 ns;
     clk <= '0';
@@ -49,6 +43,4 @@ begin
   memaddr(7 downto 0) <= abl;
 
   ram0: entity work.ram port map(memaddr, db, '0', '1');
-
-
 end main;
