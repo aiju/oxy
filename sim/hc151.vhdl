@@ -22,7 +22,11 @@ begin
       y <= '0' after tp;
       ny <= '1' after tp;
     else
-      v := i(to_integer(unsigned(s)));
+      if is_X(s) then
+        v := 'U';
+      else
+        v := i(to_integer(unsigned(s)));
+      end if;
       y <= v after tp;
       ny <= not v after tp;
     end if;

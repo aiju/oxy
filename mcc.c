@@ -13,15 +13,18 @@ enum {
 	IB = 0,		/* 4 */
 	OB = 4,		/* 4 */
 	ALU = 8,	/* 6 */
-	CIN = 14,	/* 2 */
+	CIN = 14,	/* 1 */
 	ABL = 16,	/* 3 */
 	ABH = 19,	/* 3 */
 	PCP = 22,	/* 1 */
 	FLAGS = 32,	/* 10 */
 	NEXT = 48,	/* 4 */
-	C1 = 52,	/* 4 */
+	C1 = 52,	/* 3 */
 	FETCH = 56,	/* 1 */
 };
+
+uint32_t addrxor = (1<<8);
+uint64_t dataxor = (1<<FETCH);
 
 bits bt[] = {
 	"ALU=A", 0, ALU,
@@ -70,7 +73,6 @@ bits bt[] = {
 	"ABH=FF", 4, ABH,
 	"CIN=0", 0, CIN,
 	"CIN=1", 1, CIN,
-	"CIN=C", 2, CIN,
 	"PC+1", 1, PCP,
 	"C=R", 1, FLAGS,
 	"C=1", 2, FLAGS,
@@ -90,10 +92,9 @@ bits bt[] = {
 	"C1=0", 0, C1,
 	"C1=C", 1, C1,
 	"C1=Z", 2, C1,
-	"C1=I", 3, C1,
-	"C1=V", 4, C1,
-	"C1=N", 5, C1,
-	"C1=ALUC", 6, C1,
+	"C1=V", 3, C1,
+	"C1=N", 4, C1,
+	"C1=ALUC", 5, C1,
 	NULL, 0, 0,
 };
 
@@ -103,10 +104,20 @@ typedef struct {
 
 fixed fixeds[] = {
 	8, 9,
-	1, 8,
 	4, 4,
-	2, 2,
 	0, 0,
+};
+
+typedef struct {
+	char *s;
+	uint32_t one;
+	uint32_t zero;
+} abits;
+
+abits ab[] = {
+	"C", (1<<3), 0,
+	"NC", 0, (1<<3),
+	NULL, 0, 0,
 };
 
 void
@@ -194,7 +205,7 @@ int main()
 		}
 		for(u = 0; u < 1<<17; u++){
 			if((u & ~any) == (cur & ~any))
-				rom[u] = val;
+				rom[u ^ addrxor] = val ^ dataxor;
 		}
 	}
 /*

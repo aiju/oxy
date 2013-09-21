@@ -19,7 +19,7 @@ architecture main of alu is
   signal shifted, aluout, val : std_logic_vector(7 downto 0);
   signal muxs : std_logic_vector(2 downto 0);
   signal muxi : std_logic_vector(7 downto 0);
-  signal z0, z1, z2, z3, z4, z5, z6 : std_logic;
+  signal z0, z1, z2, z3, z4, z5, z6, v0, v1, v2, v3 : std_logic;
 begin
   not0: entity hc04 port map(cin, ncin);
   ib0 <= ib(3 downto 0);
@@ -51,5 +51,10 @@ begin
   or5: entity hc32 port map(z2, z3, z5);
   or6: entity hc32 port map(z4, z5, z6);
   not3: entity hc04 port map(z6, z);
+  xor0: entity hc86 port map(db(7), func(0), v0);
+  xor1: entity hc86 port map(ib(7), v0, v1);
+  not4: entity hc04 port map(v1, v2);
+  xor2: entity hc86 port map(aluout(7), ib(7), v3);
+  and0: entity hc08 port map(v2, v3, v);
   n <= val(7);
 end main;
