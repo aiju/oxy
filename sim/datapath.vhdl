@@ -60,14 +60,14 @@ begin
   z <= preg_q(1);
   c <= preg_q(0);
   aluc0 <= aluc;
-    
+
   pc0 : entity hc163 port map(clk, '1', pcp, '1', obd(7), pcc0, ob(3 downto 0), pcq0);
   pc1 : entity hc163 port map(clk, '1', pcp, pcc0, obd(7), pcc1, ob(7 downto 4), pcq1);
   pc2 : entity hc163 port map(clk, '1', pcp, pcc1, obd(7), pcc2, ob(3 downto 0), pcq2);
   pc3 : entity hc163 port map(clk, '1', pcp, pcc2, obd(7), pcc3, ob(7 downto 4), pcq3);
   pclreg_q <= pcq1 & pcq0;
   pchreg_q <= pcq3 & pcq2;
-  
+
   zerobuf : entity hc244 port map(ibd(0), X"00", ib);
   abuf : entity hc244 port map(ibd(1), areg_q, ib);
   xbuf : entity hc244 port map(ibd(2), xreg_q, ib);

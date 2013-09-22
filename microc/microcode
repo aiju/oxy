@@ -1,0 +1,337 @@
+func zero {
+	AL = [PC++];
+	return [0:AL];
+}
+func zeroX {
+	AL = [PC++] + X;
+	return [0:AL];
+}
+func zeroY {
+	AL = [PC++] + X;
+	return [0:AL];
+}
+func abs {
+	AL = [PC++];
+	AH = [PC++];
+	return [AH:AL];
+}
+func absX {
+	AL = [PC++] + X;
+	if(ALUC)
+		AH = [PC++] + 1;
+	else
+		AH = [PC++];
+	return [AH:AL];
+}
+func absY {
+	AL = [PC++] + X;
+	AH = [PC++] + ALUC;
+	return [AH:AL];
+}
+func indX {
+	D = [PC++] + X;
+	AL = [0:D++];
+	AH = [0:D];
+	return [AH:AL];
+}
+func indY {
+	D = [PC++];
+	AL = [0:D++] + Y;
+	AH = [0:D];
+	return [AH:AL];
+}
+* {
+	if(IRQ)
+		fetch 0 goto 2;
+	else
+		fetch [PC++];
+}
+
+# ADC
+0x69 A = A + [PC++] + C <NVZC>;
+0x65 A = A + zero + C <NVZC>;
+0x75 A = A + zeroX + C <NVZC>;
+0x6D A = A + abs + C <NVZC>;
+0x7D A = A + absX + C <NVZC>;
+0x79 A = A + absY + C <NVZC>;
+0x61 A = A + indX + C <NVZC>;
+0x71 A = A + indY + C <NVZC>;
+
+# AND
+0x29 A = A & [PC++] <NZ>;
+0x25 A = A & zero <NZ>;
+0x35 A = A & zeroX <NZ>;
+0x2D A = A & abs <NZ>;
+0x3D A = A & absX <NZ>;
+0x39 A = A & absY <NZ>;
+0x21 A = A & indX <NZ>;
+0x31 A = A & indY <NZ>;
+
+# ASL
+0x0A A = SL A <NZC>;
+0x06 { D = zero; D = SL D <NZC>; [0:AL] = D; }
+0x16 { D = zeroX; D = SL D <NZC>; [0:AL] = D; }
+0x0E { D = abs; D = SL D <NZC>; [AH:AL] = D; }
+0x1E { D = absX; D = SL D <NZC>; [AH:AL] = D; }
+
+# branches
+func branch {
+	PCL = PCL + [PC] + 1;
+	if(ALUC)
+		PCH = PCH + 1;
+	else
+		fetch [PC++] goto 1;
+}
+0x90 if(!C) branch;
+0xB0 if(C) branch;
+0xD0 if(!Z) branch;
+0xF0 if(Z) branch;
+0x50 if(!V) branch;
+0x70 if(V) branch;
+0x10 if(!N) branch;
+0x30 if(N) branch;
+
+# BIT
+0x24 { P = zero <NV>; _ = A & [0:AL] <Z>; }
+0x2C { P = abs <NV>; _ = A & [AH:AL] <Z>; }
+
+# BRK
+0x00 {
+	PC++;
+	[1:S] = PCH;
+	S = S - 1;
+	[1:S] = PCL;
+	S = S - 1;
+	[1:S] = P;
+	S = S - 1;
+	PCL = [0xFF:0xFE];
+	PCH = [0xFF:0xFF] <I=1>;
+}
+
+# CLC
+0x18 <C=0>;
+# CLI
+0x58 <I=0>;
+# CLV
+0xB8 <V=0>;
+# CMP
+0xC9 _ = A - [PC++] <NZC>;
+0xC5 _ = A - zero <NZC>;
+0xD5 _ = A - zeroX <NZC>;
+0xCD _ = A - abs <NZC>;
+0xDD _ = A - absX <NZC>;
+0xD9 _ = A - absY <NZC>;
+0xC1 _ = A - indX <NZC>;
+0xD1 _ = A - indY <NZC>;
+# CPX
+0xE0 _ = X - [PC++] <NZC>;
+0xE4 _ = X - zero <NZC>;
+0xEC _ = X - abs <NZC>;
+# CPY
+0xC0 _ = Y - [PC++] <NZC>;
+0xC4 _ = Y - zero <NZC>;
+0xCC _ = Y - abs <NZC>;
+
+# DEC
+0xC6 { D = zero; D = D - 1 <NZ>; [0:AL] = D; }
+0xD6 { D = zeroX; D = D - 1 <NZ>; [0:AL] = D; }
+0xCE { D = abs; D = D - 1 <NZ>; [AH:AL] = D; }
+0xDE { D = absX; D = D - 1 <NZ>; [AH:AL] = D; }
+
+# DEX
+0xCA X = X - 1 <NZ>;
+# DEY
+0x88 Y = Y - 1 <NZ>;
+
+# EOR
+0x49 A = A & [PC++] <NZ>;
+0x45 A = A & zero <NZ>;
+0x55 A = A & zeroX <NZ>;
+0x4D A = A & abs <NZ>;
+0x5D A = A & absX <NZ>;
+0x59 A = A & absY <NZ>;
+0x41 A = A & indX <NZ>;
+0x51 A = A & indY <NZ>;
+
+# INC
+0xE6 { D = zero; D = D + 1 <NZ>; [0:AL] = D; }
+0xF6 { D = zeroX; D = D + 1 <NZ>; [0:AL] = D; }
+0xEE { D = abs; D = D + 1 <NZ>; [AH:AL] = D; }
+0xFE { D = absX; D = D + 1 <NZ>; [AH:AL] = D; }
+
+# INX
+0xE8 X = X + 1 <NZ>;
+# INY
+0xC8 Y = Y + 1 <NZ>;
+
+# JMP
+0x4C {
+	AL = [PC++];
+	PCH = [PCH:AL];
+	PCL = AL;
+}
+0x6C {
+	D = [PC++];
+	AH = [PC];
+	PCL = [AH:D++];
+	PCH = [AH:D];
+}
+
+# JSR
+0x20 {
+	AL = [PC++];
+	[1:S] = PCH;
+	S = S - 1;
+	[1:S] = PCL;
+	S = S - 1;
+	PCH = [PC];
+	PCL = AL;
+}
+
+# LDA
+0xA9 A = [PC++] <NZ>;
+0xA5 A = zero <NZ>;
+0xB5 A = zeroX <NZ>;
+0xAD A = abs <NZ>;
+0xBD A = absX <NZ>;
+0xB9 A = absY <NZ>;
+0xA1 A = indX <NZ>;
+0xB1 A = indY <NZ>;
+
+# LDX
+0xA2 X = [PC++] <NZ>;
+0xA6 X = zero <NZ>;
+0xB6 X = zeroY <NZ>;
+0xAE X = abs <NZ>;
+0xBE X = absY <NZ>;
+
+# LDY
+0xA0 Y = [PC++] <NZ>;
+0xA4 Y = zero <NZ>;
+0xB4 Y = zeroX <NZ>;
+0xAC Y = abs <NZ>;
+0xBC Y = absX <NZ>;
+
+# LSR
+0x4A A = SR A <NZC>;
+0x46 { D = zero; D = SR D <NZC>; [0:AL] = D; }
+0x56 { D = zeroX; D = SR D <NZC>; [0:AL] = D; }
+0x4E { D = abs; D = SR D <NZC>; [AH:AL] = D; }
+0x5E { D = absX; D = SR D <NZC>; [AH:AL] = D; }
+
+# NOP
+0xEA ;
+
+# ORA
+0x09 A = A | [PC++] <NZ>;
+0x05 A = A | zero <NZ>;
+0x15 A = A | zeroX <NZ>;
+0x0D A = A | abs <NZ>;
+0x1D A = A | absX <NZ>;
+0x19 A = A | absY <NZ>;
+0x01 A = A | indX <NZ>;
+0x11 A = A | indY <NZ>;
+
+# PHA
+0x48 {
+	[1:S] = A;
+	S = S - 1;
+}
+
+# PHP
+0x08 {
+	[1:S] = P;
+	S = S - 1;
+}
+
+# PLA
+0x68 {
+	S = S + 1;
+	A = [1:S] <NZ>;
+}
+
+# PLP
+0x28 {
+	S = S + 1;
+	P = [1:S] <NVIZC>;
+}
+
+# ROL
+0x2A A = SL A + C <NZC>;
+0x26 { D = zero; D = SL D + C <NZC>; [0:AL] = D; }
+0x36 { D = zeroX; D = SL D + C <NZC>; [0:AL] = D; }
+0x2E { D = abs; D = SL D + C <NZC>; [AH:AL] = D; }
+0x3E { D = absX; D = SL D + C <NZC>; [AH:AL] = D; }
+
+# ROR
+0x6A A = SR A + C <NZC>;
+0x66 { D = zero; D = SR D + C <NZC>; [0:AL] = D; }
+0x76 { D = zeroX; D = SR D + C <NZC>; [0:AL] = D; }
+0x6E { D = abs; D = SR D + C <NZC>; [AH:AL] = D; }
+0x7E { D = absX; D = SR D + C <NZC>; [AH:AL] = D; }
+
+# RTI
+0x40 {
+	S = S + 1;
+	P = [1:S] <NVIZC>;
+	S = S + 1;
+	PCL = [1:S];
+	S = S + 1;
+	PCH = [1:S];
+}
+
+# RTS
+0x60 {
+	S = S + 1;
+	PCL = [1:S];
+	S = S + 1;
+	PCH = [1:S];
+	PC++;
+}
+
+# SBC
+0xE9 A = A - [PC++] + C <NVZC>;
+0xE5 A = A - zero + C <NVZC>;
+0xF5 A = A - zeroX + C <NVZC>;
+0xED A = A - abs + C <NVZC>;
+0xFD A = A - absX + C <NVZC>;
+0xF9 A = A - absY + C <NVZC>;
+0xE1 A = A - indX + C <NVZC>;
+0xF1 A = A - indY + C <NVZC>;
+
+# SEC
+0x38 <C=1>;
+# SEI
+0x78 <I=1>;
+
+# STA
+0x85 zero = A;
+0x95 zeroX = A;
+0x8D abs = A;
+0x9D absX = A;
+0x99 absY = A;
+0x81 indX = A;
+0x91 indY = A;
+
+# STX
+0x86 zero = X;
+0x96 zeroY = X;
+0x8E abs = X;
+
+# STY
+0x84 zero = Y;
+0x94 zeroX = Y;
+0x8C abs = Y;
+
+# TAX
+0xAA X = A <NZ>;
+# TAY
+0xA8 Y = A <NZ>;
+# TSX
+0xBA X = S <NZ>;
+# TXA
+0x8A A = X <NZ>;
+# TXS
+0x9A S = X <NZ>;
+# TYA
+0x98 A = Y <NZ>;
