@@ -68,8 +68,9 @@ mallocz(int n)
 	void *v;
 
 	v = malloc(n);
-	if(v != NULL)
-		memset(v, 0, n);
+	if(v == NULL)
+		error("malloc error");
+	memset(v, 0, n);
 	return v;		
 }
 
@@ -99,6 +100,7 @@ tstr(int t)
 	case TSL: return "SL";
 	case TIF: return "if";
 	case TELSE: return "else";
+	case TEOF: return "EOF";
 	}
 	p = mallocz(10);
 	snprintf(p, 10, "%d", t);
@@ -139,11 +141,14 @@ lex(void)
 	keyword *kw;
 
 	t = mallocz(sizeof(*t));
+start:
 	while(isspace(peekch()))
 		nextch();
-	if(peekch() == '#')
+	if(peekch() == '#'){
 		while((c = nextch()) >= 0 && c != '\n')
 			;
+		goto start;
+	}
 	if(isdigit(peekch())){
 		t->t = TNUMBER;
 		t->val = 0;
@@ -167,9 +172,9 @@ lex(void)
 		while(isxdigit(peekch())){
 			c = peekch();
 			if(c >= 'a')
-				c -= 'a';
+				c -= 'a' - 10;
 			else if(c > '9')
-				c -= 'A';
+				c -= 'A' - 10;
 			else
 				c -= '0';
 			if(c >= base)
@@ -191,6 +196,7 @@ lex(void)
 		for(kw = kws; kw->s != NULL; kw++)
 			if(strcmp(buf, kw->s) == 0){
 				t->t = kw->t;
+				t->val = kw->val;
 				return t;
 			}
 		t->t = TSYMBOL;

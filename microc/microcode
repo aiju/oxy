@@ -17,10 +17,7 @@ func abs {
 }
 func absX {
 	AL = [PC++] + X;
-	if(ALUC)
-		AH = [PC++] + 1;
-	else
-		AH = [PC++];
+	AH = [PC++] + ALUC;
 	return [AH:AL];
 }
 func absY {
@@ -109,11 +106,11 @@ func branch {
 }
 
 # CLC
-0x18 <C=0>;
+0x18 <-C>;
 # CLI
-0x58 <I=0>;
+0x58 <-I>;
 # CLV
-0xB8 <V=0>;
+0xB8 <-V>;
 # CMP
 0xC9 _ = A - [PC++] <NZC>;
 0xC5 _ = A - zero <NZC>;
@@ -144,14 +141,14 @@ func branch {
 0x88 Y = Y - 1 <NZ>;
 
 # EOR
-0x49 A = A & [PC++] <NZ>;
-0x45 A = A & zero <NZ>;
-0x55 A = A & zeroX <NZ>;
-0x4D A = A & abs <NZ>;
-0x5D A = A & absX <NZ>;
-0x59 A = A & absY <NZ>;
-0x41 A = A & indX <NZ>;
-0x51 A = A & indY <NZ>;
+0x49 A = A ^ [PC++] <NZ>;
+0x45 A = A ^ zero <NZ>;
+0x55 A = A ^ zeroX <NZ>;
+0x4D A = A ^ abs <NZ>;
+0x5D A = A ^ absX <NZ>;
+0x59 A = A ^ absY <NZ>;
+0x41 A = A ^ indX <NZ>;
+0x51 A = A ^ indY <NZ>;
 
 # INC
 0xE6 { D = zero; D = D + 1 <NZ>; [0:AL] = D; }
@@ -290,19 +287,19 @@ func branch {
 }
 
 # SBC
-0xE9 A = A - [PC++] + C <NVZC>;
-0xE5 A = A - zero + C <NVZC>;
-0xF5 A = A - zeroX + C <NVZC>;
-0xED A = A - abs + C <NVZC>;
-0xFD A = A - absX + C <NVZC>;
-0xF9 A = A - absY + C <NVZC>;
-0xE1 A = A - indX + C <NVZC>;
-0xF1 A = A - indY + C <NVZC>;
+0xE9 A = A - [PC++] - !C <NVZC>;
+0xE5 A = A - zero - !C <NVZC>;
+0xF5 A = A - zeroX - !C <NVZC>;
+0xED A = A - abs - !C <NVZC>;
+0xFD A = A - absX - !C <NVZC>;
+0xF9 A = A - absY - !C <NVZC>;
+0xE1 A = A - indX - !C <NVZC>;
+0xF1 A = A - indY - !C <NVZC>;
 
 # SEC
-0x38 <C=1>;
+0x38 <+C>;
 # SEI
-0x78 <I=1>;
+0x78 <+I>;
 
 # STA
 0x85 zero = A;

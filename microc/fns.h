@@ -1,3 +1,4 @@
+void *mallocz(int);
 Token *next(void);
 Token *peek(void);
 Token *expect(int, int);
