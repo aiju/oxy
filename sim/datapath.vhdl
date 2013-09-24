@@ -63,8 +63,8 @@ begin
 
   pc0 : entity hc163 port map(clk, '1', pcp, '1', obd(7), pcc0, ob(3 downto 0), pcq0);
   pc1 : entity hc163 port map(clk, '1', pcp, pcc0, obd(7), pcc1, ob(7 downto 4), pcq1);
-  pc2 : entity hc163 port map(clk, '1', pcp, pcc1, obd(7), pcc2, ob(3 downto 0), pcq2);
-  pc3 : entity hc163 port map(clk, '1', pcp, pcc2, obd(7), pcc3, ob(7 downto 4), pcq3);
+  pc2 : entity hc163 port map(clk, '1', pcp, pcc1, obd(8), pcc2, ob(3 downto 0), pcq2);
+  pc3 : entity hc163 port map(clk, '1', pcp, pcc2, obd(8), pcc3, ob(7 downto 4), pcq3);
   pclreg_q <= pcq1 & pcq0;
   pchreg_q <= pcq3 & pcq2;
 
@@ -83,8 +83,8 @@ begin
   pclbbuf : entity hc244 port map(abld(0), pclreg_q, abl);
   albbuf : entity hc244 port map(abld(1), alreg_q, abl);
   sbbuf : entity hc244 port map(abld(2), sreg_q, abl);
-  fcalbuf : entity hc244 port map(abld(3), X"FC", abl);
-  fealbuf : entity hc244 port map(abld(4), X"FE", abh);
+  fealbuf : entity hc244 port map(abld(3), X"FE", abl);
+  ffalbuf : entity hc244 port map(abld(4), X"FF", abh);
 
   pchbbuf : entity hc244 port map(abld(0), pchreg_q, abh);
   ahbbuf : entity hc244 port map(abhd(1), ahreg_q, abh);

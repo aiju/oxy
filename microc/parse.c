@@ -7,6 +7,8 @@
 
 static Function *firstfunc, *lastfunc;
 
+Micro *codes[256];
+
 static Micro *
 uappend(Micro *a, Micro *b)
 {
@@ -32,12 +34,14 @@ ucopy(Micro *u)
 	if(u == NULL)
 		return NULL;
 	ww = NULL;
-	for(v = u; v->next != u; v = v->next){
+	for(v = u; ; v = v->next){
 		w = mallocz(sizeof(*w));
 		memcpy(w, v, sizeof(*w));
 		w->prev = w->next = w;
 		w->alt = ucopy(w->alt);
 		ww = uappend(ww, w);
+		if(v->next == u)
+			break;
 	}
 	return ww;
 }
@@ -231,26 +235,43 @@ statement(void)
 	if(peek()->t == TIF){
 		expect(TIF, 1);
 		expect('(', 1);
-		if(peek()->t == '!')
+		if(peek()->t == '!'){
+			invc = 1;
 			expect('!', 1);
-		expect(TCOND, 1);
+		}else
+			invc = 0;
+		t = expect(TCOND, 0);
+		nextc = t->val;
+		freetok(t);
 		expect(')', 1);
 		u = statement();
 		if(u != NULL && u->next != u)
 			error("if block with more than one statement"); 
 		if(peek()->t == TELSE){
 			expect(TELSE, 1);
-			if(u == NULL){
-				u = statement;
-				if(u != NULL && u->next != u)
-					error("else block with more than one statement");
-			}else{
-				u->alt = statement();
-				if(u->alt != NULL && u->alt->next != u->alt)
-					error("else block with more than one statement");
-			}
+			v = statement();
+			if(v != NULL && v->next != v)
+				error("else block with more than one statement");
 		}
-		return u;
+		if(u == NULL && v == NULL)
+			return NULL;
+		if(u == NULL){
+			u = mallocz(sizeof(*u));
+			u->prev = u->next = u;
+		}
+		if(v == NULL){
+			v = mallocz(sizeof(*v));
+			v->prev = v->next = v;
+		}
+		if(invc){
+			v->alt = u;
+			v->cond = nextc;
+			return v;
+		}else{
+			u->alt = v;
+			u->cond = nextc;
+			return u;
+		}
 	}
 	u = mallocz(sizeof(*u));
 	u->prev = u->next = u;
@@ -489,6 +510,8 @@ def(void)
 {
 	Function *f;
 	Token *t;
+	Micro *u;
+	int i;
 	
 	if(peek()->t == TFUNC){
 		f = newfunc();
@@ -514,11 +537,16 @@ def(void)
 		expect('}', 1);
 		return;
 	}
-	if(peek()->t == '*')
+	if(peek()->t == '*'){
 		expect('*', 1);
-	else
-		expect(TNUMBER, 1);
-	statement();
+		u = statement();
+		for(i = 0; i < 256; i++)
+			codes[i] = uappend(codes[i], ucopy(u));
+	}else{
+		t = expect(TNUMBER, 0);
+		u = statement();
+		codes[t->val] = uappend(codes[t->val], u);
+	}
 }
 
 void
@@ -526,11 +554,4 @@ parse(void)
 {
 	while(peek()->t != TEOF)
 		def();
-}
-
-int
-main()
-{
-	parse();
-	return 0;
 }

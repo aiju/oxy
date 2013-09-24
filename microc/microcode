@@ -72,21 +72,14 @@ func indY {
 0x1E { D = absX; D = SL D <NZC>; [AH:AL] = D; }
 
 # branches
-func branch {
-	PCL = PCL + [PC] + 1;
-	if(ALUC)
-		PCH = PCH + 1;
-	else
-		fetch [PC++] goto 1;
-}
-0x90 if(!C) branch;
-0xB0 if(C) branch;
-0xD0 if(!Z) branch;
-0xF0 if(Z) branch;
-0x50 if(!V) branch;
-0x70 if(V) branch;
-0x10 if(!N) branch;
-0x30 if(N) branch;
+0x90 { if(C) goto 0; else PCL = PCL + [PC] + 1; PCH = PCH + ALUC; }
+0xB0 { if(!C) goto 0; else PCL = PCL + [PC] + 1; PCH = PCH + ALUC; }
+0xD0 { if(Z) goto 0; else PCL = PCL + [PC] + 1; PCH = PCH + ALUC; }
+0xF0 { if(!Z) goto 0; else PCL = PCL + [PC] + 1; PCH = PCH + ALUC; }
+0x50 { if(V) goto 0; else PCL = PCL + [PC] + 1; PCH = PCH + ALUC; }
+0x70 { if(!V) goto 0; else PCL = PCL + [PC] + 1; PCH = PCH + ALUC; }
+0x10 { if(N) goto 0; else PCL = PCL + [PC] + 1; PCH = PCH + ALUC; }
+0x30 { if(!N) goto 0; else PCL = PCL + [PC] + 1; PCH = PCH + ALUC; }
 
 # BIT
 0x24 { P = zero <NV>; _ = A & [0:AL] <Z>; }
