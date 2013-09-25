@@ -39,7 +39,7 @@ func indY {
 }
 * {
 	if(IRQ)
-		fetch 0 goto 2;
+		[1:S] = PCH goto 9;
 	else
 		fetch [PC++];
 }
@@ -88,14 +88,7 @@ func indY {
 # BRK
 0x00 {
 	PC++;
-	[1:S] = PCH;
-	S = S - 1;
-	[1:S] = PCL;
-	S = S - 1;
-	[1:S] = P;
-	S = S - 1;
-	PCL = [0xFF:0xFE];
-	PCH = [0xFF:0xFF] <I=1>;
+	[1:S] = PCH goto 9;
 }
 
 # CLC
@@ -325,3 +318,14 @@ func indY {
 0x9A S = X <NZ>;
 # TYA
 0x98 A = Y <NZ>;
+
+* {
+	next;
+	9: S = S - 1;
+	[1:S] = PCL;
+	S = S - 1;
+	[1:S] = P;
+	S = S - 1 goto 15;
+	PCH = [0xFF:0xFF] <+I> goto 0;
+	PCL = [0xFF:0xFE] goto 14;
+}

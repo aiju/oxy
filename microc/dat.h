@@ -15,6 +15,7 @@ enum {
 	TSL,
 	TIF,
 	TELSE,
+	TNEXT,
 };
 
 enum {
@@ -114,8 +115,8 @@ struct Operand {
 
 struct Micro {
 	uint8_t aluop, ib, ob, alucin, pcinc, dinc, nflag, vflag, zflag, cflag, iflag, abl, abh, fetch, mem;
-	int cond, condval, addcond;
-	Micro *prev, *next, *alt;
+	int n, stop, targ, cond, addcond;
+	Micro *prev, *next, *alt, *targu;
 };
 
 struct Function {

@@ -276,6 +276,16 @@ statement(void)
 	u = mallocz(sizeof(*u));
 	u->prev = u->next = u;
 	v = u;
+	if(peek()->t == TNUMBER){
+		t = expect(TNUMBER, 0);
+		expect(':', 1);
+		u->n = t->val + 1;
+		freetok(t);
+	}
+	if(peek()->t == TNEXT){
+		expect(TNEXT, 1);
+		u->stop = 1;
+	}
 	if(peek()->t == TFETCH){
 		expect(TFETCH, 1);
 		o = val();
@@ -465,10 +475,6 @@ operand:
 			error("double PC increment");
 		u->pcinc = 1;
 	}
-	if(peek()->t == TGOTO){
-		expect(TGOTO, 1);
-		expect(TNUMBER, 1);
-	}
 	if(peek()->t == TFLAGS){
 		t = expect(TFLAGS, 0);
 		op1 = FLAGCOPY;
@@ -499,6 +505,12 @@ operand:
 				u->iflag = op1;
 				break;
 			}
+		freetok(t);
+	}
+	if(peek()->t == TGOTO){
+		expect(TGOTO, 1);
+		t = expect(TNUMBER, 0);
+		u->targ = t->val + 1;
 		freetok(t);
 	}
 	expect(';', 1);

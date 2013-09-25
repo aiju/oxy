@@ -19,7 +19,7 @@ architecture main of rom is
   signal mem : array_t;
 begin
   process
-    file f : file_t open read_mode is "../rom";
+    file f : file_t open read_mode is "../microc/rom";
     variable c : character;
   begin
     for i in mem'range loop

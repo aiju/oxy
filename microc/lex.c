@@ -27,6 +27,7 @@ static keyword kws[] = {
 	"fetch", TFETCH, 0,
 	"if", TIF, 0,
 	"else", TELSE, 0,
+	"next", TNEXT, 0,
 	"A", TREGISTER, REGA,
 	"X", TREGISTER, REGX,
 	"Y", TREGISTER, REGY,
@@ -152,6 +153,7 @@ start:
 	if(isdigit(peekch())){
 		t->t = TNUMBER;
 		t->val = 0;
+		base = 10;
 		if(peekch() == '0'){
 			nextch();
 			switch(peekch()){

@@ -9,11 +9,10 @@ architecture main of main is
   signal microaddr : std_logic_vector(16 downto 0);
   signal microdata : std_logic_vector(63 downto 0);
   signal memaddr : std_logic_vector(15 downto 0);
-  signal db, abl, abh, instr, cmuxi : std_logic_vector(7 downto 0);
-  signal ib, ob : std_logic_vector(3 downto 0);
-  signal nextst, state, nextcc, cc : std_logic_vector(3 downto 0);
+  signal db, abl, abh, instr, nextst, state, cmuxi : std_logic_vector(7 downto 0);
+  signal ib, ob, targ : std_logic_vector(3 downto 0);
   signal abls, abhs, cmuxs : std_logic_vector(2 downto 0);
-  signal clk, pcp, fetch, alucin, n, z, v, c, i, aluc : std_logic;
+  signal clk, pcp, fetch, nfetch, f0, f1, alucin, n, z, v, c, i, aluc, reset : std_logic;
   signal alufunc : std_logic_vector(5 downto 0);
   signal flags : std_logic_vector(9 downto 0);
 begin
@@ -24,31 +23,49 @@ begin
     clk <= '0';
     wait for 500 ns;
   end process;
+  
+  process
+  begin
+    reset <= '1';
+    wait for 3 us;
+    reset <= '0';
+    wait;
+  end process;
 
-  instr0: entity work.hc377 port map(clk, fetch, db, instr);
+  microaddr <= '0' & instr & state;
+  instr0: entity work.hc377 port map(clk, nfetch, db, instr);
+  state0: entity work.hc377 port map(clk, '0', nextst, state);
   rom0: entity work.rom port map(microaddr, microdata);
-  state0: entity work.hc173 port map(clk, '0', nextst, state);
-  state1: entity work.hc173 port map(clk, '0', nextcc, cc);
-  microaddr(16 downto 9) <= instr;
-  microaddr(8) <= '1';
-  microaddr(7 downto 4) <= state;
-  microaddr(3) <= cc(0);
-  microaddr(2 downto 0) <= (others => '0');
-  nextcc(3 downto 1) <= (others => '0');
-  cmuxi <= (1 => c, 2 => z, 3 => v, 4 => n, 5 => aluc, others => '0');
-  cmux0: entity work.hc151 port map('0', cmuxs, cmuxi, nextcc(0), open);
+  
+  or0: entity work.hc32 port map(targ(0), reset, nextst(4));
+  or1: entity work.hc32 port map(targ(1), reset, nextst(5));
+  or2: entity work.hc32 port map(targ(2), reset, nextst(6));
+  or3: entity work.hc32 port map(targ(3), reset, nextst(7));
+  nextst(3) <= '0';
+  nextst(1) <= aluc;
+  nextst(0) <= c;
+  cmuxs <= '0' & instr(7 downto 6);
+  cmuxi <= (0 => n, 1 => v, 2 => c, 3 => z, others => '0');
+  cmux0: entity work.hc151 port map('0', cmuxs, cmuxi, nextst(2), open);
     
-  ib <= microdata(3 downto 0);
-  ob <= microdata(7 downto 4);
-  alufunc <= microdata(13 downto 8);
-  alucin <= microdata(14);
-  abls <= microdata(18 downto 16);
-  abhs <= microdata(21 downto 19);
-  pcp <= microdata(22);
-  flags <= microdata(41 downto 32);
-  nextst <= microdata(51 downto 48);
-  cmuxs(2 downto 0) <= microdata(54 downto 52);
-  fetch <= microdata(56);
+  alufunc <= microdata(5 downto 0);
+  flags(5 downto 4) <= microdata(7 downto 6);
+  ib <= microdata(11 downto 8);
+  ob <= microdata(15 downto 12);
+  pcp <= microdata(16);
+  alucin <= microdata(18);
+  targ <= microdata(23 downto 20);
+  flags(9 downto 8) <= microdata(25 downto 24);
+  flags(7 downto 6) <= microdata(27 downto 26);
+  flags(3 downto 2) <= microdata(29 downto 28);
+  flags(1 downto 0) <= microdata(31 downto 30);
+  abls <= microdata(34 downto 32);
+  abhs <= microdata(37 downto 35);
+  
+  or4: entity work.hc32 port map(state(4), state(5), f0);
+  or5: entity work.hc32 port map(state(6), state(7), f1);
+  or6: entity work.hc32 port map(f0, f1, fetch);
+  not0: entity work.hc04 port map(fetch, nfetch);
   
   datapath0: entity work.datapath port map(clk, db, abl, abh, ib, ob, abls, abhs, pcp, alufunc, flags, alucin, n, v, i, z, c, aluc);
   memaddr(15 downto 8) <= abh;

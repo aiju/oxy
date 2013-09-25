@@ -15,11 +15,10 @@ end entity;
 architecture main of hc181 is
   constant tp : time := 30 ns;
 begin
-  process
+  process(a, b, cin, s)
     variable aa, bb, cc, naa, nbb : unsigned(4 downto 0);
     variable ff : unsigned(4 downto 0);
   begin
-    wait until a'event or b'event or cin'event or s'event;
     aa(3 downto 0) := unsigned(a);
     bb(3 downto 0) := unsigned(b);
     aa(4) := '0';
@@ -61,7 +60,7 @@ begin
     when "11101" => ff := aa or nbb;
     when "11110" => ff := aa or bb;
     when "11111" => ff := aa;
-    when others => ff := (others => 'X');
+    when others => ff := (others => 'U');
     end case;
     f <= std_logic_vector(ff(3 downto 0)) after tp;
     cout <= not ff(4) after tp;
