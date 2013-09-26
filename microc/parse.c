@@ -173,19 +173,19 @@ val(void)
 			if(peek()->t == TNUMBER){
 				t = expect(TNUMBER, 0);
 				switch(t->val){
-				case 0xFE: o->abl = ABH0; break;
-				case 0xFF: o->abl = ABHFF; break;
-				default: error("constant %#x not permitted as ABH", t->val);
+				case 0xFE: o->abl = ABLFE; break;
+				case 0xFF: o->abl = ABLFF; break;
+				default: error("constant %#x not permitted as ABL", t->val);
 				}
 				freetok(t);
 			}else{
 				t = expect(TREGISTER, 0);
 				switch(t->val){
-				case REGPCL: o->abh = ABLPCL; break;
-				case REGAL: o->abh = ABLAL; break;
-				case REGS: o->abh = ABLS; break;
-				case REGD: o->abh = ABLD; break;
-				default: error("register %d not permitted as ABH", t->val);
+				case REGPCL: o->abl = ABLPCL; break;
+				case REGAL: o->abl = ABLAL; break;
+				case REGS: o->abl = ABLS; break;
+				case REGD: o->abl = ABLD; break;
+				default: error("register %d not permitted as ABL", t->val);
 				}
 				if(peek()->t == TINC){
 					expect(TINC, 1);
@@ -389,7 +389,7 @@ operand:
 				}
 			}
 			if(oa != NULL)
-				u->ib = o->n;
+				u->ib = oa->n;
 			if(ob != NULL)
 				memaccess(MEMRD, ob, u);
 			switch(op1){
@@ -514,7 +514,7 @@ operand:
 		freetok(t);
 	}
 	expect(';', 1);
-	return u;
+	return v;
 }
 
 static void

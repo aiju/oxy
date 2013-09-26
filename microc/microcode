@@ -7,7 +7,7 @@ func zeroX {
 	return [0:AL];
 }
 func zeroY {
-	AL = [PC++] + X;
+	AL = [PC++] + Y;
 	return [0:AL];
 }
 func abs {
@@ -21,7 +21,7 @@ func absX {
 	return [AH:AL];
 }
 func absY {
-	AL = [PC++] + X;
+	AL = [PC++] + Y;
 	AH = [PC++] + ALUC;
 	return [AH:AL];
 }
@@ -34,14 +34,14 @@ func indX {
 func indY {
 	D = [PC++];
 	AL = [0:D++] + Y;
-	AH = [0:D];
+	AH = [0:D] + ALUC;
 	return [AH:AL];
 }
 * {
 	if(IRQ)
 		[1:S] = PCH goto 9;
 	else
-		fetch [PC++];
+		fetch [PC++] goto 1;
 }
 
 # ADC

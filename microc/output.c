@@ -18,13 +18,15 @@ printu(int i, Micro *u)
 		printf(" D++");
 	if(u->fetch)
 		printf(" FETCH");
+	if(u->stop)
+		printf(" STOP");
 	printf(" ->%d\n", u->targ - 1);
 }
 
 void
-fixtarg(Micro *u, Micro *c)
+fixtarg(Micro *u, Micro *w, Micro *c)
 {
-	Micro *v;
+	Micro *v, *f;
 
 	if(u == NULL)
 		return;
@@ -35,13 +37,17 @@ fixtarg(Micro *u, Micro *c)
 			if(v->n == u->targ)
 				u->targu = v;
 		while((v = v->next) != c);
-		if(u->targu == NULL)
+		if(u->targu == NULL && u != c && u != c->alt)
 			error("invalid target %d", u->targ);
 	}else{
-		if(u->next->stop)
+		if(w != NULL)
+			f = w->next;
+		else
+			f = u->next;
+		if(f->stop)
 			u->targu = c;
 		else
-			u->targu = u->next;
+			u->targu = f;
 		u->targ = u->targu->n;
 	}
 	if(u->cond != 0 && u->addcond != 0 && u->cond != u->addcond)
@@ -51,10 +57,10 @@ fixtarg(Micro *u, Micro *c)
 enum {
 	ADDRINSTR = 8,
 	ADDRSTATE = 4,
-	ADDRIRQ = 3,
-	ADDRFLAG = 2,
-	ADDRALUC = 1,
-	ADDRC = 0,
+	ADDRIRQ = 1<<3,
+	ADDRFLAG = 1<<2,
+	ADDRALUC = 1<<1,
+	ADDRC = 1<<0,
 };
 
 enum {
@@ -87,10 +93,15 @@ writeu(uint32_t addr, uint32_t any, Micro *u, int cinxor)
 	uint32_t a;
 	uint64_t v;
 
-	v = (aluops[u->aluop] << VALALU) | (u->ib << VALIB) | (u->ob << VALOB) | (u->alucin << VALCIN) |
+	if(u->targ <= 0)
+		error("targ of %.4x:%d is <= 0", (addr>>ADDRINSTR), (addr>>ADDRSTATE) & 0xf);
+	v = (aluops[u->aluop] << VALALU) | (u->ib << VALIB) | (u->ob << VALOB) | ((u->alucin ^ cinxor) << VALCIN) |
 		(u->pcinc << VALPCINC) | (u->dinc << VALDINC) | (u->nflag << VALNFL) | (u->vflag << VALVFL) |
 		(u->zflag << VALZFL) | (u->cflag << VALCFL) | (u->iflag << VALIFL) |
-		((uint64_t)u->abh << VALABH) | ((uint64_t)u->abl << VALABL);
+		((uint64_t)u->abh << VALABH) | ((uint64_t)u->abl << VALABL) |
+		((u->targ - 1) << VALNEXT);
+	if(u->mem == MEMWR)
+		v |= (1<<VALWR);
 	for(a = 0; a < 131072; a++)
 		if((a & ~any) == (addr & ~any))
 			rom[a] = v;
@@ -105,7 +116,12 @@ writeout(int i, Micro *u)
 	if(u == NULL)
 		return;
 
-	any = (1<<17) | ADDRIRQ | ADDRFLAG | ADDRALUC | ADDRC;
+	if(0){
+		printu(i, u);
+		if(u->alt != NULL)
+			printu(i, u->alt);
+	}
+	any = (1<<16) | ADDRIRQ | ADDRFLAG | ADDRALUC | ADDRC;
 	cc = u->cond + u->addcond;
 	switch(cc){
 	case CONDNO:
@@ -168,14 +184,14 @@ output(void)
 				}else{
 					u->n = ++j;
 					if(u->alt != NULL)
-						u->n = j;
+						u->alt->n = j;
 				}
 			}
 		}while((u = u->next) != codes[i]);
 		u = codes[i];
 		do{
-			fixtarg(u, codes[i]);
-			fixtarg(u->alt, codes[i]);
+			fixtarg(u, NULL, codes[i]);
+			fixtarg(u->alt, u, codes[i]);
 		}while((u = u->next) != codes[i]);
 		u = codes[i];
 		do

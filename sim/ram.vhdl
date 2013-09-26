@@ -16,7 +16,7 @@ architecture main of ram is
   constant tdw : time := 25 ns;
   constant tohz : time := 20 ns;
   type array_t is array(65535 downto 0) of std_logic_vector(7 downto 0);
-  signal mem : array_t := (0 => X"A9", 1 => X"42", 2 => X"A9", 3 => X"00", 4=> X"A9", 5=> X"85", others => X"00");
+  signal mem : array_t := (0  => X"A9", 1 => X"42", 2 => X"85", 3 => X"43", 4 => X"A6", 5 => X"43", others => X"00");
   signal dout : std_logic_vector(7 downto 0);
   signal coe : std_logic := '0';
 begin

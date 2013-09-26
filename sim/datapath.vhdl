@@ -9,11 +9,12 @@ entity datapath is
     abl, abh : out std_logic_vector(7 downto 0);
     ibs, obs : in std_logic_vector(3 downto 0);
     abls, abhs : in std_logic_vector(2 downto 0);
-    pcp : in std_logic;
+    pcp, dp : in std_logic;
     alufunc : in std_logic_vector(5 downto 0);
     flags : in std_logic_vector(9 downto 0);
     alucin : in std_logic;
-    n,v,i,z,c,aluc0 : out std_logic
+    n,v,i,z,c,aluc0 : out std_logic;
+    nwr : in std_logic
   );
 end datapath;
 
@@ -26,8 +27,8 @@ architecture main of datapath is
     pclreg_q, pchreg_q, dreg_q,
     preg_d, preg_q
      : std_logic_vector(7 downto 0);
-  signal pcq0, pcq1, pcq2, pcq3 : std_logic_vector(3 downto 0);
-  signal pcc0, pcc1, pcc2, pcc3, alun, aluv, aluz, aluc
+  signal pcq0, pcq1, pcq2, pcq3, dq0, dq1 : std_logic_vector(3 downto 0);
+  signal pcc0, pcc1, pcc2, pcc3, dc0, dc1, alun, aluv, aluz, aluc
      : std_logic;
 begin
   ibdec : entity hc154 port map('0', '0', ibs, ibd);
@@ -43,7 +44,6 @@ begin
   alreg : entity hc377 port map(clk, obd(4), ob, alreg_q);
   ahreg : entity hc377 port map(clk, obd(5), ob, ahreg_q);
   sreg : entity hc377 port map(clk, obd(6), ob, sreg_q);
-  dreg : entity hc377 port map(clk, obd(9), ob, dreg_q);
   preg : entity hc377 port map(clk, '0', preg_d, preg_q);
     
   nflag : entity flag port map(preg_q(7), preg_d(7), alun, ob(7), flags(9 downto 8), obd(10));
@@ -65,6 +65,9 @@ begin
   pc1 : entity hc163 port map(clk, '1', pcp, pcc0, obd(7), pcc1, ob(7 downto 4), pcq1);
   pc2 : entity hc163 port map(clk, '1', pcp, pcc1, obd(8), pcc2, ob(3 downto 0), pcq2);
   pc3 : entity hc163 port map(clk, '1', pcp, pcc2, obd(8), pcc3, ob(7 downto 4), pcq3);
+  d0 : entity hc163 port map(clk, '1', dp, '1', obd(9), dc0, ob(3 downto 0), dq0);
+  d1 : entity hc163 port map(clk, '1', dp, dc0, obd(9), dc1, ob(7 downto 4), dq1);
+  dreg_q <= dq1 & dq0;
   pclreg_q <= pcq1 & pcq0;
   pchreg_q <= pcq3 & pcq2;
 
@@ -84,13 +87,14 @@ begin
   albbuf : entity hc244 port map(abld(1), alreg_q, abl);
   sbbuf : entity hc244 port map(abld(2), sreg_q, abl);
   fealbuf : entity hc244 port map(abld(3), X"FE", abl);
-  ffalbuf : entity hc244 port map(abld(4), X"FF", abh);
+  ffalbuf : entity hc244 port map(abld(4), X"FF", abl);
+  dalbuf : entity hc244 port map(abld(5), dreg_q, abl);
 
-  pchbbuf : entity hc244 port map(abld(0), pchreg_q, abh);
+  pchbbuf : entity hc244 port map(abhd(0), pchreg_q, abh);
   ahbbuf : entity hc244 port map(abhd(1), ahreg_q, abh);
   oneahbuf : entity hc244 port map(abhd(2), X"01", abh);
   zeroahbuf : entity hc244 port map(abhd(3), X"00", abh);
   ffahbuf : entity hc244 port map(abhd(4), X"FF", abh);
     
-  db <= (others => 'Z');
+  dbbuf: entity hc244 port map(nwr, ob, db);
 end main;

@@ -12,7 +12,7 @@ architecture main of main is
   signal db, abl, abh, instr, nextst, state, cmuxi : std_logic_vector(7 downto 0);
   signal ib, ob, targ : std_logic_vector(3 downto 0);
   signal abls, abhs, cmuxs : std_logic_vector(2 downto 0);
-  signal clk, pcp, fetch, nfetch, f0, f1, alucin, n, z, v, c, i, aluc, reset : std_logic;
+  signal clk, nclk, pcp, dp, nfetch, f0, f1, alucin, n, z, v, c, i, wr, oe, we, we0, nwr, aluc, reset : std_logic;
   signal alufunc : std_logic_vector(5 downto 0);
   signal flags : std_logic_vector(9 downto 0);
 begin
@@ -27,7 +27,7 @@ begin
   process
   begin
     reset <= '1';
-    wait for 3 us;
+    wait for 1.5 us;
     reset <= '0';
     wait;
   end process;
@@ -53,7 +53,9 @@ begin
   ib <= microdata(11 downto 8);
   ob <= microdata(15 downto 12);
   pcp <= microdata(16);
+  dp <= microdata(17);
   alucin <= microdata(18);
+  wr <= microdata(19);
   targ <= microdata(23 downto 20);
   flags(9 downto 8) <= microdata(25 downto 24);
   flags(7 downto 6) <= microdata(27 downto 26);
@@ -64,12 +66,16 @@ begin
   
   or4: entity work.hc32 port map(state(4), state(5), f0);
   or5: entity work.hc32 port map(state(6), state(7), f1);
-  or6: entity work.hc32 port map(f0, f1, fetch);
-  not0: entity work.hc04 port map(fetch, nfetch);
+  or6: entity work.hc32 port map(f0, f1, nfetch);
   
-  datapath0: entity work.datapath port map(clk, db, abl, abh, ib, ob, abls, abhs, pcp, alufunc, flags, alucin, n, v, i, z, c, aluc);
+  oe <= wr;
+  not0: entity work.hc04 port map(wr, nwr);
+  or7: entity work.hc32 port map(clk, nwr, we0);
+  or8: entity work.hc32 port map(we0, reset, we);
+  
+  datapath0: entity work.datapath port map(clk, db, abl, abh, ib, ob, abls, abhs, pcp, dp, alufunc, flags, alucin, n, v, i, z, c, aluc, nwr);
   memaddr(15 downto 8) <= abh;
   memaddr(7 downto 0) <= abl;
 
-  ram0: entity work.ram port map(memaddr, db, '0', '1');
+  ram0: entity work.ram port map(memaddr, db, oe, we);
 end main;

@@ -25,7 +25,7 @@ begin
     bb(4) := '0';
     naa := aa xor "01111";
     nbb := bb xor "01111";
-    cc(3 downto 1) := (others => '0');
+    cc(4 downto 1) := (others => '0');
     cc(0) := not cin;
     case s is
     when "00000" => ff := aa + cc;

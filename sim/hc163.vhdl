@@ -15,7 +15,7 @@ architecture main of hc163 is
   constant tsu : time := 12 ns;
   constant th : time := 3 ns;
   constant tp : time := 15 ns;
-  signal v : std_logic_vector(3 downto 0) := X"0";
+  signal v : std_logic_vector(3 downto 0) := X"F";
   signal tcv : std_logic := '0';
 begin
   process
