@@ -150,7 +150,7 @@ func indY {
 # JMP
 0x4C {
 	AL = [PC++];
-	PCH = [PCH:AL];
+	PCH = [PC];
 	PCL = AL;
 }
 0x6C {
