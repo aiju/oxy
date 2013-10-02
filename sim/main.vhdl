@@ -9,10 +9,12 @@ architecture main of main is
   signal microaddr : std_logic_vector(16 downto 0);
   signal microdata : std_logic_vector(63 downto 0);
   signal memaddr : std_logic_vector(15 downto 0);
-  signal db, abl, abh, instr, nextst, state, cmuxi : std_logic_vector(7 downto 0);
+  signal db, abl, abh, instr, nextst, state, cmuxi, nextmisc, misc : std_logic_vector(7 downto 0);
   signal ib, ob, targ : std_logic_vector(3 downto 0);
   signal abls, abhs, cmuxs : std_logic_vector(2 downto 0);
-  signal clk, nclk, pcp, dp, nfetch, f0, f1, alucin, n, z, v, c, i, wr, oe, we, we0, nwr, aluc, reset : std_logic;
+  signal clk, nclk, pcp, dp, nfetch, f0, f1, alucin,
+    n, z, v, c, i, wr, oe, we, we0, nwr,
+    aluc, reset, inreset, ninreset : std_logic;
   signal alufunc : std_logic_vector(5 downto 0);
   signal flags : std_logic_vector(9 downto 0);
 begin
@@ -72,8 +74,15 @@ begin
   not0: entity work.hc04 port map(wr, nwr);
   or7: entity work.hc32 port map(clk, nwr, we0);
   or8: entity work.hc32 port map(we0, reset, we);
+
+  miscreg: entity work.hc377 port map(clk, '0', nextmisc, misc);
+  nextmisc(7 downto 2) <= (others => '0');
+  nextmisc(0) <= reset;
+  nextmisc(1) <= misc(0);
+  or9: entity work.hc32 port map(misc(0), misc(1), inreset);
+  not1: entity work.hc04 port map(inreset, ninreset);
   
-  datapath0: entity work.datapath port map(clk, db, abl, abh, ib, ob, abls, abhs, pcp, dp, alufunc, flags, alucin, n, v, i, z, c, aluc, nwr);
+  datapath0: entity work.datapath port map(clk, db, abl, abh, ib, ob, abls, abhs, pcp, dp, alufunc, flags, alucin, n, v, i, z, c, aluc, nwr, ninreset);
   memaddr(15 downto 8) <= abh;
   memaddr(7 downto 0) <= abl;
 

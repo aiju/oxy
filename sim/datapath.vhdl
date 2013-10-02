@@ -14,7 +14,7 @@ entity datapath is
     flags : in std_logic_vector(9 downto 0);
     alucin : in std_logic;
     n,v,i,z,c,aluc0 : out std_logic;
-    nwr : in std_logic
+    nwr, ninreset : in std_logic
   );
 end datapath;
 
@@ -25,7 +25,7 @@ architecture main of datapath is
     areg_q, xreg_q, yreg_q,
     sreg_q, alreg_q, ahreg_q,
     pclreg_q, pchreg_q, dreg_q,
-    preg_d, preg_q
+    preg_d, preg_q, veclow, vechigh
      : std_logic_vector(7 downto 0);
   signal pcq0, pcq1, pcq2, pcq3, dq0, dq1 : std_logic_vector(3 downto 0);
   signal pcc0, pcc1, pcc2, pcc3, dc0, dc1, alun, aluv, aluz, aluc
@@ -86,8 +86,10 @@ begin
   pclbbuf : entity hc244 port map(abld(0), pclreg_q, abl);
   albbuf : entity hc244 port map(abld(1), alreg_q, abl);
   sbbuf : entity hc244 port map(abld(2), sreg_q, abl);
-  fealbuf : entity hc244 port map(abld(3), X"FE", abl);
-  ffalbuf : entity hc244 port map(abld(4), X"FF", abl);
+  veclow <= (0 => '0', 1 => ninreset, others => '1');
+  vechigh <= (1 => ninreset, others => '1');
+  fealbuf : entity hc244 port map(abld(3), veclow, abl);
+  ffalbuf : entity hc244 port map(abld(4), vechigh, abl);
   dalbuf : entity hc244 port map(abld(5), dreg_q, abl);
 
   pchbbuf : entity hc244 port map(abhd(0), pchreg_q, abh);

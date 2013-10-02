@@ -8,15 +8,30 @@ entity ram is
     data : inout std_logic_vector(7 downto 0);
     oe, we : in std_logic
   );
+  
+  type array_t is array(0 to 65535) of std_logic_vector(7 downto 0);
+  type file_t is file of character;
+  impure function init_ram return array_t is
+    variable mem : array_t;
+    file f : file_t open read_mode is "../ram";
+    variable c : character;
+  begin
+    for i in mem'range loop
+      read(f, c);
+      mem(i) := std_logic_vector(to_unsigned(character'pos(c), 8));
+   end loop;
+   file_close(f);
+   return mem;
+  end function;
 end ram;
+
 
 architecture main of ram is
   constant tc : time := 55 ns;
   constant twp : time := 35 ns;
   constant tdw : time := 25 ns;
   constant tohz : time := 20 ns;
-  type array_t is array(65535 downto 0) of std_logic_vector(7 downto 0);
-  signal mem : array_t := (0 => X"4C", 1 => X"37", 2 => X"13", others => X"00");
+  signal mem : array_t := init_ram;
   signal dout : std_logic_vector(7 downto 0);
   signal coe : std_logic := '0';
 begin

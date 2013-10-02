@@ -34,7 +34,7 @@ begin
     when "00011" => ff := cc - 1;
     when "00100" => ff := aa + (aa and nbb) + cc;
     when "00101" => ff := (aa or bb) + (aa and nbb) + cc;
-    when "00110" => ff := aa - bb - 1 + cc;
+    when "00110" => ff := aa + (15 - bb) + cc;
     when "00111" => ff := (aa and nbb) - 1 + cc;
     when "01000" => ff := aa + (aa and bb) + cc;
     when "01001" => ff := aa + bb + cc;
@@ -43,7 +43,7 @@ begin
     when "01100" => ff := aa + aa + cc;
     when "01101" => ff := (aa or bb) + aa + cc;
     when "01110" => ff := (aa or nbb) + aa + cc;
-    when "01111" => ff := aa - 1 + cc;
+    when "01111" => ff := aa + 15 + cc;
     when "10000" => ff := naa;
     when "10001" => ff := (aa or bb) xor "01111";
     when "10010" => ff := naa and bb;
