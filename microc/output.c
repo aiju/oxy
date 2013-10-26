@@ -115,6 +115,8 @@ writeout(int i, Micro *u)
 
 	if(u == NULL)
 		return;
+	if(u->stop)
+		return;
 
 	if(0){
 		printu(i, u);
@@ -137,7 +139,7 @@ writeout(int i, Micro *u)
 	case CONDV:
 		if((i >> 6) != 1)
 			error("V condition opcode format error");
-		any ^= cc = ADDRFLAG;
+		any ^= ca = ADDRFLAG;
 		break;
 	case CONDZ:
 		if((i >> 6) != 3)
@@ -155,7 +157,7 @@ writeout(int i, Micro *u)
 	}
 	val = (i << ADDRINSTR) | ((u->n - 1) << ADDRSTATE);
 	if(u->cond != 0){
-		writeu(val | ca, any, u, 1);
+		writeu(val | ca, any, u, 0);
 		writeu(val, any, u->alt, 0);
 	}else if(u->addcond != 0){
 		writeu(val | ca, any, u, 1);

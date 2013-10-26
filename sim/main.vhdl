@@ -46,7 +46,7 @@ begin
   nextst(3) <= '0';
   nextst(1) <= aluc;
   nextst(0) <= c;
-  cmuxs <= '0' & instr(7 downto 6);
+  cmuxs <= '0' & db(7 downto 6);
   cmuxi <= (0 => n, 1 => v, 2 => c, 3 => z, others => '0');
   cmux0: entity work.hc151 port map('0', cmuxs, cmuxi, nextst(2), open);
     
