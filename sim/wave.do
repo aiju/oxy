@@ -16,6 +16,7 @@ add wave -noupdate /main/alucin
 add wave -noupdate -divider {memory bus}
 add wave -noupdate -radix hexadecimal /main/memaddr
 add wave -noupdate -radix hexadecimal /main/db
+add wave -noupdate /main/we
 add wave -noupdate /main/reset
 add wave -noupdate -divider register
 add wave -noupdate -radix hexadecimal /main/datapath0/areg_q

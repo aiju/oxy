@@ -15,7 +15,7 @@ architecture main of hc377 is
   constant thd : time := 3 ns; -- hold time (data)
   constant the : time := 5 ns; -- hold time (enable)
   constant tp : time := 30 ns; -- prop. delay
-  signal v: std_logic_vector(7 downto 0) := X"FF";
+  signal v: std_logic_vector(7 downto 0) := X"00";
 begin
   process
   begin

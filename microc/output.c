@@ -79,6 +79,8 @@ enum {
 	VALCFL = 30,
 	VALABL = 32,
 	VALABH = 35,
+	VALINIRQ = 38,
+	VALSIGNED = 39,
 };
 
 uint32_t aluops[] = {
@@ -99,7 +101,7 @@ writeu(uint32_t addr, uint32_t any, Micro *u, int cinxor)
 		(u->pcinc << VALPCINC) | (u->dinc << VALDINC) | (u->nflag << VALNFL) | (u->vflag << VALVFL) |
 		(u->zflag << VALZFL) | (u->cflag << VALCFL) | (u->iflag << VALIFL) |
 		((uint64_t)u->abh << VALABH) | ((uint64_t)u->abl << VALABL) |
-		((u->targ - 1) << VALNEXT);
+		((u->targ - 1) << VALNEXT) | ((uint64_t)(1 ^ u->inirq) << VALINIRQ) | ((uint64_t)u->sign << VALSIGNED);
 	if(u->mem == MEMWR)
 		v |= (1<<VALWR);
 	for(a = 0; a < 131072; a++)

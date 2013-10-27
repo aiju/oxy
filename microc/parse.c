@@ -507,6 +507,14 @@ operand:
 			}
 		freetok(t);
 	}
+	if(peek()->t == TINIRQ){
+		expect(TINIRQ, 1);
+		u->inirq = 1;
+	}
+	if(peek()->t == TSIGNED){
+		expect(TSIGNED, 1);
+		u->sign = 1;
+	}
 	if(peek()->t == TGOTO){
 		expect(TGOTO, 1);
 		t = expect(TNUMBER, 0);

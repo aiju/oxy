@@ -15,7 +15,7 @@ architecture main of flag is
   signal muxi : std_logic_vector(7 downto 0);
   signal muxs : std_logic_vector(2 downto 0);
 begin
-  muxi <= (1 => b, 4 => q, 5 => a, 6 => '1', others => '0');
+  muxi <= (1 => b, 5 => a, 6 => '1', 7 => '0', others => q);
   muxs(2) <= l;
   muxs(1 downto 0) <= m;
   mux: entity work.hc151 port map('0', muxs, muxi, d, open);

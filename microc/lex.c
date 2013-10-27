@@ -25,6 +25,8 @@ static keyword kws[] = {
 	"goto", TGOTO, 0,
 	"return", TRETURN, 0,
 	"fetch", TFETCH, 0,
+	"inirq", TINIRQ, 0,
+	"signed", TSIGNED, 0,
 	"if", TIF, 0,
 	"else", TELSE, 0,
 	"next", TNEXT, 0,

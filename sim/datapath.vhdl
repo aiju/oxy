@@ -14,7 +14,7 @@ entity datapath is
     flags : in std_logic_vector(9 downto 0);
     alucin : in std_logic;
     n,v,i,z,c,aluc0 : out std_logic;
-    nwr, ninreset : in std_logic
+    nwr, ninreset, inirq : in std_logic
   );
 end datapath;
 
@@ -48,7 +48,7 @@ begin
     
   nflag : entity flag port map(preg_q(7), preg_d(7), alun, ob(7), flags(9 downto 8), obd(10));
   vflag : entity flag port map(preg_q(6), preg_d(6), aluv, ob(6), flags(7 downto 6), obd(10));
-  preg_d(5) <= '1';
+  preg_d(5) <= inirq;
   preg_d(4) <= '0';
   preg_d(3) <= '0';
   iflag : entity flag port map(preg_q(2), preg_d(2), '0', ob(2), flags(5 downto 4), obd(10));

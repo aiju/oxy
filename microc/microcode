@@ -25,6 +25,12 @@ func absY {
 	AH = [PC++] + ALUC;
 	return [AH:AL];
 }
+func ind {
+	D = [PC++];
+	AL = [0:D++];
+	AH = [0:D];
+	return [AH:AL];
+}
 func indX {
 	D = [PC++] + X;
 	AL = [0:D++];
@@ -53,6 +59,7 @@ func indY {
 0x79 A = A + absY + C <NVZC>;
 0x61 A = A + indX + C <NVZC>;
 0x71 A = A + indY + C <NVZC>;
+0x72 A = A + ind + C <NVZC>;
 
 # AND
 0x29 A = A & [PC++] <NZ>;
@@ -63,6 +70,7 @@ func indY {
 0x39 A = A & absY <NZ>;
 0x21 A = A & indX <NZ>;
 0x31 A = A & indY <NZ>;
+0x32 A = A & ind <NZ>;
 
 # ASL
 0x0A A = SL A <NZC>;
@@ -72,14 +80,14 @@ func indY {
 0x1E { D = absX; D = SL D <NZC>; [AH:AL] = D; }
 
 # branches
-0x90 { if(C) goto 0; else PCL = PCL + [PC] + 1; PCH = PCH + ALUC; }
-0xB0 { if(!C) goto 0; else PCL = PCL + [PC] + 1; PCH = PCH + ALUC; }
-0xD0 { if(Z) goto 0; else PCL = PCL + [PC] + 1; PCH = PCH + ALUC; }
-0xF0 { if(!Z) goto 0; else PCL = PCL + [PC] + 1; PCH = PCH + ALUC; }
-0x50 { if(V) goto 0; else PCL = PCL + [PC] + 1; PCH = PCH + ALUC; }
-0x70 { if(!V) goto 0; else PCL = PCL + [PC] + 1; PCH = PCH + ALUC; }
-0x10 { if(N) goto 0; else PCL = PCL + [PC] + 1; PCH = PCH + ALUC; }
-0x30 { if(!N) goto 0; else PCL = PCL + [PC] + 1; PCH = PCH + ALUC; }
+0x90 { if(C) PC++ goto 0; else PCL = PCL + [PC] + 1 signed; PCH = PCH + ALUC; }
+0xB0 { if(!C) PC++ goto 0; else PCL = PCL + [PC] + 1 signed; PCH = PCH + ALUC; }
+0xD0 { if(Z) PC++ goto 0; else PCL = PCL + [PC] + 1 signed; PCH = PCH + ALUC; }
+0xF0 { if(!Z) PC++ goto 0; else PCL = PCL + [PC] + 1 signed; PCH = PCH + ALUC; }
+0x50 { if(V) PC++ goto 0; else PCL = PCL + [PC] + 1 signed; PCH = PCH + ALUC; }
+0x70 { if(!V) PC++ goto 0; else PCL = PCL + [PC] + 1 signed; PCH = PCH + ALUC; }
+0x10 { if(N) PC++ goto 0; else PCL = PCL + [PC] + 1 signed; PCH = PCH + ALUC; }
+0x30 { if(!N) PC++ goto 0; else PCL = PCL + [PC] + 1 signed; PCH = PCH + ALUC; }
 
 # BIT
 0x24 { P = zero <NV>; _ = A & [0:AL] <Z>; }
@@ -88,7 +96,12 @@ func indY {
 # BRK
 0x00 {
 	PC++;
-	[1:S] = PCH goto 9;
+	[1:S] = PCH;
+	 S = S - 1;
+	[1:S] = PCL;
+	S = S - 1;
+	[1:S] = P;
+	S = S - 1 goto 15;
 }
 
 # CLC
@@ -106,6 +119,7 @@ func indY {
 0xD9 _ = A - absY <NZC>;
 0xC1 _ = A - indX <NZC>;
 0xD1 _ = A - indY <NZC>;
+0xD2 _ = A - ind <NZC>;
 # CPX
 0xE0 _ = X - [PC++] <NZC>;
 0xE4 _ = X - zero <NZC>;
@@ -135,6 +149,7 @@ func indY {
 0x59 A = A ^ absY <NZ>;
 0x41 A = A ^ indX <NZ>;
 0x51 A = A ^ indY <NZ>;
+0x52 A = A ^ ind <NZ>;
 
 # INC
 0xE6 { D = zero; D = D + 1 <NZ>; [0:AL] = D; }
@@ -180,6 +195,7 @@ func indY {
 0xB9 A = absY <NZ>;
 0xA1 A = indX <NZ>;
 0xB1 A = indY <NZ>;
+0xB2 A = ind <NZ>;
 
 # LDX
 0xA2 X = [PC++] <NZ>;
@@ -214,6 +230,7 @@ func indY {
 0x19 A = A | absY <NZ>;
 0x01 A = A | indX <NZ>;
 0x11 A = A | indY <NZ>;
+0x12 A = A | ind <NZ>;
 
 # PHA
 0x48 {
@@ -281,6 +298,7 @@ func indY {
 0xF9 A = A - absY - !C <NVZC>;
 0xE1 A = A - indX - !C <NVZC>;
 0xF1 A = A - indY - !C <NVZC>;
+0xF2 A = A - ind - !C <NVZC>;
 
 # SEC
 0x38 <+C>;
@@ -295,6 +313,7 @@ func indY {
 0x99 absY = A;
 0x81 indX = A;
 0x91 indY = A;
+0x92 ind = A;
 
 # STX
 0x86 zero = X;
@@ -323,9 +342,9 @@ func indY {
 	next;
 	9: S = S - 1;
 	[1:S] = PCL;
-	S = S - 1;
+	S = S - 1 inirq;
 	[1:S] = P;
 	S = S - 1 goto 15;
-	PCH = [0xFF:0xFF] <+I> goto 0;
-	PCL = [0xFF:0xFE] goto 14;
+	PCH = [0xFF:0xFF] goto 0;
+	PCL = [0xFF:0xFE] <+I> goto 14;
 }
