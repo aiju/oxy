@@ -158,10 +158,10 @@ func indY {
 
 # INC
 0x1A A = A + 1 <NZ>;
-0xE6 { D = zero; D = D + 1 <NZ>; [0:AL] = D; }
-0xF6 { D = zeroX; D = D + 1 <NZ>; [0:AL] = D; }
-0xEE { D = abs; D = D + 1 <NZ>; [AH:AL] = D; }
-0xFE { D = absX; D = D + 1 <NZ>; [AH:AL] = D; }
+0xE6 { D = zero + 1 <NZ>; [0:AL] = D; }
+0xF6 { D = zeroX + 1 <NZ>; [0:AL] = D; }
+0xEE { D = abs + 1 <NZ>; [AH:AL] = D; }
+0xFE { D = absX + 1 <NZ>; [AH:AL] = D; }
 
 # INX
 0xE8 X = X + 1 <NZ>;
@@ -387,6 +387,15 @@ func indY {
 0x9B Y = X <NZ>;
 # TYX
 0xBB X = Y <NZ>;
+# XXY
+0x0B { D = X; X = Y; Y = D; }
+# XAM
+0x1B { D = zero; [0:AL] = A; A = D; }
+0x2B { D = abs; [AH:AL] = A; A = D; }
+# ICC
+0x3B { D = zero + C <NZC>; [0:AL] = D; }
+# DCC
+0x4B { D = zero; D = D - !C <NZC>; [0:AL] = D; }
 
 # TRB
 0x14 { _ = A & zero <Z>; D = !A & [0:AL]; [0:AL] = D; }
