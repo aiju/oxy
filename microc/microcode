@@ -88,10 +88,14 @@ func indY {
 0x70 { if(!V) PC++ goto 0; else PCL = PCL + [PC] + 1 signed; PCH = PCH + ALUC; }
 0x10 { if(N) PC++ goto 0; else PCL = PCL + [PC] + 1 signed; PCH = PCH + ALUC; }
 0x30 { if(!N) PC++ goto 0; else PCL = PCL + [PC] + 1 signed; PCH = PCH + ALUC; }
+0x80 { PCL = PCL + [PC] + 1 signed; PCH = PCH + ALUC; }
 
 # BIT
+0x89 { _ = A & [PC++] <Z>; }
 0x24 { P = zero <NV>; _ = A & [0:AL] <Z>; }
+0x34 { P = zeroX <NV>; _ = A & [0:AL] <Z>; }
 0x2C { P = abs <NV>; _ = A & [AH:AL] <Z>; }
+0x3C { P = absX <NV>; _ = A & [AH:AL] <Z>; }
 
 # BRK
 0x00 {
@@ -130,6 +134,7 @@ func indY {
 0xCC _ = Y - abs <NZC>;
 
 # DEC
+0x3A A = A - 1 <NZ>;
 0xC6 { D = zero; D = D - 1 <NZ>; [0:AL] = D; }
 0xD6 { D = zeroX; D = D - 1 <NZ>; [0:AL] = D; }
 0xCE { D = abs; D = D - 1 <NZ>; [AH:AL] = D; }
@@ -152,6 +157,7 @@ func indY {
 0x52 A = A ^ ind <NZ>;
 
 # INC
+0x1A A = A + 1 <NZ>;
 0xE6 { D = zero; D = D + 1 <NZ>; [0:AL] = D; }
 0xF6 { D = zeroX; D = D + 1 <NZ>; [0:AL] = D; }
 0xEE { D = abs; D = D + 1 <NZ>; [AH:AL] = D; }
@@ -169,10 +175,26 @@ func indY {
 	PCL = AL;
 }
 0x6C {
-	D = [PC++];
+	AL = [PC++];
 	AH = [PC];
-	PCL = [AH:D++];
-	PCH = [AH:D];
+	PCL = [AH:AL];
+	AL = AL + 1;
+	if(ALUC)
+		AH = AH + 1;
+	else
+		PCH = [AH:AL] goto 0;
+	PCH = [AH:AL];
+}
+0x7C {
+	AL = [PC++] + X;
+	AH = [PC] + ALUC;
+	PCL = [AH:AL];
+	AL = AL + 1;
+	if(ALUC)
+		AH = AH + 1;
+	else
+		PCH = [AH:AL] goto 0;
+	PCH = [AH:AL];
 }
 
 # JSR
@@ -244,6 +266,12 @@ func indY {
 	S = S - 1;
 }
 
+# PHX
+0xDA {
+	[1:S] = X;
+	S = S - 1;
+}
+
 # PLA
 0x68 {
 	S = S + 1;
@@ -254,6 +282,18 @@ func indY {
 0x28 {
 	S = S + 1;
 	P = [1:S] <NVIZC>;
+}
+
+# PLX
+0xFA {
+	S = S + 1;
+	X = [1:S] <NZ>;
+}
+
+# PLY
+0x7A {
+	S = S + 1;
+	Y = [1:S] <NZ>;
 }
 
 # ROL
@@ -325,6 +365,12 @@ func indY {
 0x94 zeroX = Y;
 0x8C abs = Y;
 
+# STZ
+0x64 zero = 0;
+0x74 zeroX = 0;
+0x9C abs = 0;
+0x9E absX = 0;
+
 # TAX
 0xAA X = A <NZ>;
 # TAY
@@ -337,6 +383,18 @@ func indY {
 0x9A S = X <NZ>;
 # TYA
 0x98 A = Y <NZ>;
+# TXY
+0x9B Y = X <NZ>;
+# TYX
+0xBB X = Y <NZ>;
+
+# TRB
+0x14 { _ = A & zero <Z>; D = !A & [0:AL]; [0:AL] = D; }
+0x1C { _ = A & abs <Z>; D = !A & [AH:AL]; [AH:AL] = D; }
+
+# TSB
+0x04 { _ = A & zero <Z>; D = A | [0:AL]; [0:AL] = D; }
+0x0C { _ = A & abs <Z>; D = A | [AH:AL]; [AH:AL] = D; }
 
 * {
 	next;

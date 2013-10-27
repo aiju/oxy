@@ -94,6 +94,7 @@ enum {
 	ALUAND,
 	ALUOR,
 	ALUXOR,
+	ALUNOTAND,
 };
 
 typedef struct Token Token;

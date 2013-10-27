@@ -220,7 +220,7 @@ statement(void)
 {
 	Micro *u, *v;
 	Operand *o, *oa, *ob, *oc;
-	int op1, op2, invc, nextc;
+	int op1, op2, inva, invb, invc, inv, nextc;
 	Token *t;
 	char *p;
 
@@ -331,7 +331,7 @@ statement(void)
 				op1 = TSR;
 			}
 			oa = ob = oc = NULL;
-			invc = nextc = 0;
+			inva = invb = invc = 0;
 			goto operand;
 			while(isop(peek()->t)){
 				t = next();
@@ -342,26 +342,26 @@ statement(void)
 				else
 					error("too many operations");
 				freetok(t);
-				nextc = 0;
+operand:
+				inv = 0;
 				if(peek()->t == '!'){
 					expect('!', 1);
-					nextc = invc = 1;
+					inv = 1;
 				}
-operand:
 				o = val();
 				switch(o->t){
 				case OPMEM:
 					if(ob != NULL)
 						error("two B operands");
-					if(nextc)
-						error("negating B operand");
+					if(inv)
+						invb = 1;
 					ob = o;
 					break;
 				case OPREG:
 					if(oa != NULL)
 						error("two A operands");
-					if(nextc)
-						error("negating A operand");
+					if(inv)
+						inva = 1;
 					if(op2 != 0 && op2 == '-' || op2 == 0 && op1 == '-')
 						error("wrong order for subtraction");
 					oa = o;
@@ -374,6 +374,8 @@ operand:
 					if(o->n != 1)
 						error("invalid constant");
 				case OPCOND:
+					if(inv)
+						invc = 1;
 					if(oc != NULL || op1 == 0)
 						error("C operand error");
 					if(op2 == 0){
@@ -395,30 +397,48 @@ operand:
 			switch(op1){
 			case '+':
 				u->aluop = ALUPLUS;
+				if(inva || invb)
+					error("invalid negation");
 				break;
 			case '-':
 				u->aluop = ALUMINUS;
+				if(inva || invb)
+					error("invalid negation");
 				break;
 			case '&':
 				u->aluop = ALUAND;
+				if(invb)
+					error("invalid negation");
+				if(inva)
+					u->aluop = ALUNOTAND;
 				break;
 			case '|':
 				u->aluop = ALUOR;
+				if(inva || invb)
+					error("invalid negation");
 				break;
 			case '^':
 				u->aluop = ALUXOR;
+				if(inva || invb)
+					error("invalid negation");
 				break;
 			case TSL:
 				u->aluop = ALUSL;
 				if(ob != NULL)
 					error("A operand to SL");
+				if(inva || invb)
+					error("invalid negation");
 				break;
 			case TSR:
 				u->aluop = ALUSR;
 				if(ob != NULL)
 					error("A operand to SR");
+				if(inva || invb)
+					error("invalid negation");
 				break;
 			case 0:
+				if(inva || invb)
+					error("invalid negation");
 				if(oa != NULL)
 					u->aluop = ALUA;
 				if(ob != NULL)
