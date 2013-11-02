@@ -1,0 +1,49 @@
+%!
+7.2 7.2 scale
+10 10 translate
+0.1 setlinewidth
+0 0 moveto 63.0 0 lineto 63.0 39.4 lineto 0 39.4 lineto closepath stroke
+2.5 1.3 translate
+0.5 setgray
+/h 37 def
+0 1 58 { h {dup} repeat 0 1 h { 0.25 0 360 arc closepath stroke } for } for
+0 setgray
+/ics 10 dict def
+ics begin
+	/00 [(74HC00) 7 4] def
+	/02 [(74HC00) 7 4] def
+	/04 [(74HC04) 7 4] def
+	/08 [(74HC08) 7 4] def
+	/32 [(74HC32) 7 4] def
+	/86 [(74HC86) 7 4] def
+	/138 [(74HC138) 8 4] def
+	/151 [(74HC151) 8 4] def
+	/154 [(74HC154) 12 4] def
+	/163 [(74HC163) 8 4] def
+	/181 [(74HC181) 12 6] def
+	/244 [(74HC244) 10 4] def
+	/374 [(74HC374) 10 4] def
+	/377 [(74HC377) 10 4] def
+	/010 [(27C010) 16 6] def
+end
+/Arial findfont 1 scalefont setfont
+
+/bbox { gsave newpath 0 0 moveto false charpath flattenpath pathbbox grestore } def
+/cent { bbox } def
+/adj { 2 index add h exch sub 4 2 roll h exch sub 4 2 roll exch 3 index add exch } def
+/rect { 3 index 3 index moveto 1 index 3 index lineto 1 index 1 index lineto 3 index 1 index lineto closepath gsave 0.7 setgray fill grestore stroke pop pop pop pop } def
+/avg { 4 1 roll exch 4 1 roll add 2 div 3 1 roll add 2 div } def
+/comp { ics exch get aload pop 5 3 roll 4 2 roll adj 4 copy rect avg 3 2 roll dup bbox avg 5 3 roll 4 1 roll exch 4 1 roll exch sub 3 1 roll exch sub gsave moveto show grestore } def
+/comprot { ics exch get aload pop 5 3 roll 4 2 roll exch adj 4 copy rect avg 3 2 roll dup bbox exch avg 5 3 roll 4 1 roll exch 4 1 roll exch add 3 1 roll exch sub gsave moveto 90 rotate show grestore } def
+/row { { dup type /integertype eq { incx } { dup ics exch get aload pop x exch 2 div y exch sub 5 4 roll comp /x exch x add stx add def pop } ifelse } forall } def
+/rotrow { { dup type /integertype eq { incx } { dup ics exch get aload pop exch x exch 2 div y exch sub 5 4 roll comprot /x exch x add stx add def pop } ifelse } forall } def
+
+
+/stx 3 def
+/sty 8 def
+/y -2 def
+/newrow {/x 3 def /y y sty add def} def
+/incx { x add /x exch def } def
+/incy { y add /y exch def } def
+
+newrow

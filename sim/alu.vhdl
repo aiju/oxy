@@ -17,9 +17,7 @@ architecture main of alu is
   signal aluout0, aluout1, ib0, ib1, db0, db1 : std_logic_vector(3 downto 0);
   signal func0 : std_logic_vector(4 downto 0);
   signal shifted, aluout, val : std_logic_vector(7 downto 0);
-  signal muxs : std_logic_vector(2 downto 0);
-  signal muxi : std_logic_vector(7 downto 0);
-  signal z0, z1, z2, z3, z4, z5, z6, v0, v1, v2, v3, v4 : std_logic;
+  signal z0, z1, z2, z3, z4, z5, z6, v0, v1, v2, v3, v4, c1, c2 : std_logic;
 begin
   not0: entity hc04 port map(cin, ncin);
   ib0 <= ib(3 downto 0);
@@ -40,9 +38,9 @@ begin
   shiftcout <= ib(0);
   buf1: entity hc244 port map(nshift, shifted, val);
   ob <= val;
-  muxs <= (0 => shift, others => '0');
-  muxi <= (0 => alucout, 1 => shiftcout, others => '0');
-  mux0 : entity hc151 port map('0', muxs, muxi, c, ncout);
+  and1: entity hc08 port map(alucout, nshift, c1);
+  and2: entity hc08 port map(shiftcout, shift, c2);
+  or7: entity hc32 port map(c1, c2, c);
   or0: entity hc32 port map(val(0), val(1), z0);
   or1: entity hc32 port map(val(2), val(3), z1);
   or2: entity hc32 port map(val(4), val(5), z2);

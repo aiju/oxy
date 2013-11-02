@@ -13,7 +13,7 @@ architecture main of main is
   signal db, abl, abh, instr, nextst, state, cmuxi, nextmisc, misc : std_logic_vector(7 downto 0);
   signal ib, ob, targ : std_logic_vector(3 downto 0);
   signal abls, abhs, cmuxs : std_logic_vector(2 downto 0);
-  signal clk, nclk, pcp, dp, nfetch, f0, f1, alucin,
+  signal clk, nclk, pcp, dp, nfetch, fetch, sync, f0, f1, alucin,
     n, z, v, c, i, wr, oe, we, we0, nwr,
     aluc, reset, inreset, ninreset,
     irq, nint, int, inirq, busreq, busack, nbusack,
@@ -41,7 +41,6 @@ begin
   begin
     irq <= '1';
     busreq <= '1';
-    wait for 10 us;
     wait;
   end process;
 
@@ -87,6 +86,8 @@ begin
   or4: entity work.hc32 port map(state(4), state(5), f0);
   or5: entity work.hc32 port map(state(6), state(7), f1);
   or6: entity work.hc32 port map(f0, f1, nfetch);
+  not4: entity work.hc04 port map(nfetch, fetch);
+  and3: entity work.hc08 port map(fetch, busack, sync);
   
   oe <= wr;
   not0: entity work.hc04 port map(wr, nwr);
