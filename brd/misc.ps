@@ -2,4 +2,22 @@
 (board.ps) run
 
 [/377 /244 /377 /244] row newrow
-[/244] row
+[/244 /244 /244 /244] row newrow
+[/244] row newrow
+
+0 2 0 8 con -4 2 0 [(IB0) (IB1) (IB2) (IB3) (IB4) (IB5) (IB6) (IB7)] lpins
+0 16 0 6 con -4 16 0 [(VCC) (VCC) (CLK) (GND) (GND) (GND)] lpins
+0 28 0 8 con -4 28 0 [(DB0) (DB1) (DB2) (DB3) (DB4) (DB5) (DB6) (DB7)] lpins
+58 2 0 8 con 62 2 0 [(OB0) (OB1) (OB2) (OB3) (OB4) (OB5) (OB6) (OB7)] rpins
+
+40 0 90 6 con 40 -2 90 [(BUSACK) (/BUSACK) (/BUSREQ) (/WE) (WR) (/INT)] rpins
+47 0 90 6 con 47 -2 90 [(RESET) (SYNC) (IBR0) (IBR1) (IBR2) (IBR3)] rpins
+
+4 36 90 5 con 4 39 90 [(ABL0) (ABL2) (ABL4) (ABL6) (GND)] lpins
+4 37 90 5 con 4 43 90 [(ABL1) (ABL3) (ABL5) (ABL7) (GND)] lpins
+
+13 36 90 5 con 13 39 90 [(ABH0) (ABH2) (ABH4) (ABH6) (GND)] lpins
+13 37 90 5 con 13 43 90 [(ABH1) (ABH3) (ABH5) (ABH7) (GND)] lpins
+
+22 36 90 5 con 22 39 90 [(IBS0) (IBS1) (IBS2) (IBS3) (GND)] lpins
+22 37 90 5 con 22 43 90 [(IBD2) (IBD3) (OBD2) (OBD3) (GND)] lpins

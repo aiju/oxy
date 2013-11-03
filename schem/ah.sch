@@ -2500,13 +2500,6 @@ Based on the following sources:
 <label x="55.88" y="-96.52" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="OBD0" class="0">
-<segment>
-<pinref part="IC14" gate="A" pin="0"/>
-<wire x1="101.6" y1="-71.12" x2="109.22" y2="-71.12" width="0.1524" layer="91"/>
-<label x="101.6" y="-71.12" size="1.778" layer="95"/>
-</segment>
-</net>
 <net name="OBD1" class="0">
 <segment>
 <pinref part="IC14" gate="A" pin="1"/>

@@ -2285,6 +2285,11 @@ Based on the following sources:
 <wire x1="304.8" y1="48.26" x2="299.72" y2="48.26" width="0.1524" layer="91"/>
 <label x="299.72" y="48.26" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="IC16" gate="A" pin="D5"/>
+<wire x1="304.8" y1="38.1" x2="299.72" y2="38.1" width="0.1524" layer="91"/>
+<label x="299.72" y="38.1" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="/F5" class="0">
 <segment>
@@ -2507,7 +2512,7 @@ Based on the following sources:
 <label x="132.08" y="66.04" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="C" class="0">
+<net name="ALUC" class="0">
 <segment>
 <pinref part="IC9" gate="D" pin="O"/>
 <wire x1="147.32" y1="60.96" x2="154.94" y2="60.96" width="0.1524" layer="91"/>
@@ -3002,13 +3007,6 @@ Based on the following sources:
 <label x="299.72" y="68.58" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="N" class="0">
-<segment>
-<pinref part="IC16" gate="A" pin="D5"/>
-<wire x1="304.8" y1="38.1" x2="299.72" y2="38.1" width="0.1524" layer="91"/>
-<label x="299.72" y="38.1" size="1.778" layer="95"/>
-</segment>
-</net>
 <net name="FL8" class="0">
 <segment>
 <pinref part="IC16" gate="A" pin="A"/>
@@ -3038,6 +3036,26 @@ Based on the following sources:
 </nets>
 </sheet>
 </sheets>
+<errors>
+<approved hash="205,1,71.12,71.0565,IC1P,VCC,,,,"/>
+<approved hash="205,1,71.12,17.7165,IC2P,VCC,,,,"/>
+<approved hash="205,1,30.48,65.9765,IC3P,VCC,,,,"/>
+<approved hash="205,1,106.68,85.0265,IC4P,VCC,,,,"/>
+<approved hash="205,1,25.4,26.6065,IC8P,VCC,,,,"/>
+<approved hash="205,1,176.44,88.8365,IC5P,VCC,,,,"/>
+<approved hash="205,1,176.44,63.4365,IC9P,VCC,,,,"/>
+<approved hash="205,1,161.2,15.1765,IC6P,VCC,,,,"/>
+<approved hash="205,1,214.54,27.8765,IC10P,VCC,,,,"/>
+<approved hash="205,1,54.5205,-15.3035,IC7P,VCC,,,,"/>
+<approved hash="205,1,358.14,81.2165,IC18P,VCC,,,,"/>
+<approved hash="205,1,276.86,78.6765,IC11P,VCC,,,,"/>
+<approved hash="205,1,276.86,35.4965,IC12P,VCC,,,,"/>
+<approved hash="205,1,276.86,-5.1435,IC13P,VCC,,,,"/>
+<approved hash="205,1,317.5,78.6765,IC15P,VCC,,,,"/>
+<approved hash="205,1,317.5,35.4965,IC16P,VCC,,,,"/>
+<approved hash="205,1,317.5,-5.1435,IC17P,VCC,,,,"/>
+<approved hash="205,1,358.14,44.3865,IC14P,VCC,,,,"/>
+</errors>
 </schematic>
 </drawing>
 </eagle>

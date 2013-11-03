@@ -1117,6 +1117,7 @@ Based on the following sources:
 <instance part="IC13" gate="A" x="241.3" y="-20.32"/>
 <instance part="IC13" gate="B" x="269.24" y="-15.24"/>
 <instance part="IC13" gate="C" x="154.94" y="-20.32"/>
+<instance part="IC7" gate="D" x="228.6" y="20.32"/>
 </instances>
 <busses>
 </busses>
@@ -2146,7 +2147,7 @@ Based on the following sources:
 <label x="185.42" y="22.86" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="IRQ" class="0">
+<net name="/IRQ" class="0">
 <segment>
 <pinref part="IC6" gate="A" pin="4D"/>
 <wire x1="226.06" y1="86.36" x2="238.76" y2="86.36" width="0.1524" layer="91"/>
@@ -2224,6 +2225,11 @@ Based on the following sources:
 <pinref part="IC7" gate="B" pin="I0"/>
 <wire x1="220.98" y1="48.26" x2="210.82" y2="48.26" width="0.1524" layer="91"/>
 <label x="210.82" y="48.26" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="IC7" gate="D" pin="I0"/>
+<wire x1="220.98" y1="22.86" x2="210.82" y2="22.86" width="0.1524" layer="91"/>
+<label x="210.82" y="22.86" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="IRQ0" class="0">
@@ -2519,6 +2525,11 @@ Based on the following sources:
 <wire x1="276.86" y1="45.72" x2="284.48" y2="45.72" width="0.1524" layer="91"/>
 <label x="276.86" y="45.72" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="IC7" gate="D" pin="I1"/>
+<wire x1="220.98" y1="17.78" x2="213.36" y2="17.78" width="0.1524" layer="91"/>
+<label x="213.36" y="17.78" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="/INRES" class="0">
 <segment>
@@ -2594,6 +2605,11 @@ Based on the following sources:
 <wire x1="238.76" y1="83.82" x2="226.06" y2="83.82" width="0.1524" layer="91"/>
 <label x="226.06" y="83.82" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="IC7" gate="C" pin="O"/>
+<wire x1="236.22" y1="33.02" x2="246.38" y2="33.02" width="0.1524" layer="91"/>
+<label x="236.22" y="33.02" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="INVF" class="0">
 <segment>
@@ -2601,10 +2617,12 @@ Based on the following sources:
 <wire x1="264.16" y1="83.82" x2="271.78" y2="83.82" width="0.1524" layer="91"/>
 <label x="264.16" y="83.82" size="1.778" layer="95"/>
 </segment>
+</net>
+<net name="SYNC" class="0">
 <segment>
-<pinref part="IC7" gate="C" pin="O"/>
-<wire x1="236.22" y1="33.02" x2="246.38" y2="33.02" width="0.1524" layer="91"/>
-<label x="236.22" y="33.02" size="1.778" layer="95"/>
+<pinref part="IC7" gate="D" pin="O"/>
+<wire x1="236.22" y1="20.32" x2="243.84" y2="20.32" width="0.1524" layer="91"/>
+<label x="236.22" y="20.32" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>
