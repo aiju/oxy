@@ -1881,6 +1881,8 @@ W = angled&lt;p&gt;
 <part name="SV8" library="con-lstb" deviceset="MA08-1" device=""/>
 <part name="SV9" library="con-lstb" deviceset="MA06-1" device=""/>
 <part name="SV10" library="con-lstb" deviceset="MA06-1" device=""/>
+<part name="GND2" library="supply1" deviceset="GND" device=""/>
+<part name="GND3" library="supply1" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -1937,6 +1939,10 @@ W = angled&lt;p&gt;
 <instance part="SV8" gate="1" x="-15.24" y="83.82" rot="MR180"/>
 <instance part="SV9" gate="1" x="-15.24" y="53.34" rot="MR180"/>
 <instance part="SV10" gate="1" x="-15.24" y="22.86" rot="MR180"/>
+<instance part="IC10" gate="D" x="190.5" y="-15.24"/>
+<instance part="GND2" gate="1" x="182.88" y="-20.32"/>
+<instance part="IC6" gate="D" x="218.44" y="-15.24"/>
+<instance part="GND3" gate="1" x="210.82" y="-20.32"/>
 </instances>
 <busses>
 </busses>
@@ -3361,6 +3367,20 @@ W = angled&lt;p&gt;
 <pinref part="SV10" gate="1" pin="6"/>
 <wire x1="-7.62" y1="17.78" x2="0" y2="17.78" width="0.1524" layer="91"/>
 <label x="-7.62" y="17.78" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="IC10" gate="D" pin="I0"/>
+<pinref part="IC10" gate="D" pin="I1"/>
+<wire x1="182.88" y1="-12.7" x2="182.88" y2="-17.78" width="0.1524" layer="91"/>
+<pinref part="GND2" gate="1" pin="GND"/>
+<junction x="182.88" y="-17.78"/>
+</segment>
+<segment>
+<pinref part="IC6" gate="D" pin="I0"/>
+<pinref part="IC6" gate="D" pin="I1"/>
+<wire x1="210.82" y1="-12.7" x2="210.82" y2="-17.78" width="0.1524" layer="91"/>
+<pinref part="GND3" gate="1" pin="GND"/>
+<junction x="210.82" y="-17.78"/>
 </segment>
 </net>
 <net name="CLK" class="0">
