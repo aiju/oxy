@@ -7656,8 +7656,6 @@ Source: AVX .. aphvc.pdf</description>
 <instance part="IC6" gate="A" x="193.04" y="10.16"/>
 <instance part="GND8" gate="1" x="180.34" y="-5.08"/>
 <instance part="IC4" gate="E" x="246.38" y="22.86"/>
-<instance part="IC7" gate="A" x="243.84" y="7.62"/>
-<instance part="IC7" gate="B" x="243.84" y="-5.08"/>
 <instance part="IC7" gate="C" x="243.84" y="-17.78"/>
 <instance part="IC7" gate="D" x="276.86" y="25.4"/>
 <instance part="IC8" gate="A" x="63.5" y="-33.02"/>
@@ -7677,6 +7675,7 @@ Source: AVX .. aphvc.pdf</description>
 <instance part="IC10" gate="B" x="63.5" y="-71.12"/>
 <instance part="IC10" gate="C" x="63.5" y="-83.82"/>
 <instance part="IC10" gate="D" x="63.5" y="-96.52"/>
+<instance part="IC1" gate="C" x="243.84" y="-5.08"/>
 </instances>
 <busses>
 </busses>
@@ -8326,11 +8325,6 @@ Source: AVX .. aphvc.pdf</description>
 <wire x1="71.12" y1="-58.42" x2="83.82" y2="-58.42" width="0.1524" layer="91"/>
 <label x="71.12" y="-58.42" size="1.778" layer="95"/>
 </segment>
-<segment>
-<pinref part="IC7" gate="A" pin="I1"/>
-<wire x1="236.22" y1="5.08" x2="226.06" y2="5.08" width="0.1524" layer="91"/>
-<label x="226.06" y="5.08" size="1.778" layer="95"/>
-</segment>
 </net>
 <net name="/EXAMN" class="0">
 <segment>
@@ -8339,9 +8333,9 @@ Source: AVX .. aphvc.pdf</description>
 <label x="71.12" y="-71.12" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="IC7" gate="B" pin="I0"/>
 <wire x1="226.06" y1="-2.54" x2="236.22" y2="-2.54" width="0.1524" layer="91"/>
 <label x="226.06" y="-2.54" size="1.778" layer="95"/>
+<pinref part="IC1" gate="C" pin="I0"/>
 </segment>
 </net>
 <net name="/DEP" class="0">
@@ -8390,16 +8384,11 @@ Source: AVX .. aphvc.pdf</description>
 <label x="251.46" y="-17.78" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="/CNT" class="0">
+<net name="CNT" class="0">
 <segment>
-<pinref part="IC7" gate="B" pin="O"/>
 <wire x1="251.46" y1="-5.08" x2="264.16" y2="-5.08" width="0.1524" layer="91"/>
 <label x="251.46" y="-5.08" size="1.778" layer="95"/>
-</segment>
-<segment>
-<pinref part="IC7" gate="A" pin="I0"/>
-<wire x1="236.22" y1="10.16" x2="226.06" y2="10.16" width="0.1524" layer="91"/>
-<label x="226.06" y="10.16" size="1.778" layer="95"/>
+<pinref part="IC1" gate="C" pin="O"/>
 </segment>
 </net>
 <net name="/DEPN1" class="0">
@@ -8409,28 +8398,9 @@ Source: AVX .. aphvc.pdf</description>
 <label x="205.74" y="17.78" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="IC7" gate="B" pin="I1"/>
 <wire x1="236.22" y1="-7.62" x2="226.06" y2="-7.62" width="0.1524" layer="91"/>
 <label x="226.06" y="-7.62" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="/RD0" class="0">
-<segment>
-<pinref part="IC7" gate="A" pin="O"/>
-<wire x1="251.46" y1="7.62" x2="264.16" y2="7.62" width="0.1524" layer="91"/>
-<label x="251.46" y="7.62" size="1.778" layer="95"/>
-</segment>
-<segment>
-<pinref part="IC6" gate="A" pin="4D"/>
-<wire x1="180.34" y1="15.24" x2="167.64" y2="15.24" width="0.1524" layer="91"/>
-<label x="167.64" y="15.24" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="/RD" class="0">
-<segment>
-<pinref part="IC6" gate="A" pin="4Q"/>
-<wire x1="205.74" y1="15.24" x2="218.44" y2="15.24" width="0.1524" layer="91"/>
-<label x="205.74" y="15.24" size="1.778" layer="95"/>
+<pinref part="IC1" gate="C" pin="I1"/>
 </segment>
 </net>
 </nets>
