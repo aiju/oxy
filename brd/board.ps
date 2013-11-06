@@ -8,43 +8,89 @@
 /h 37 def
 0 1 58 { h {dup} repeat 0 1 h { 0.25 0 360 arc closepath stroke } for } for
 0 setgray
+/std [(A1) (B1) (Y1) (A2) (B2) (Y2) (GND) (Y3) (A3) (B3) (Y4) (A4) (B4) (VCC)] def
 /ics 10 dict def
 ics begin
-	/00 [(74HC00) 7 4] def
-	/02 [(74HC00) 7 4] def
-	/04 [(74HC04) 7 4] def
-	/08 [(74HC08) 7 4] def
-	/14 [(74HC14) 7 4] def
-	/32 [(74HC32) 7 4] def
-	/86 [(74HC86) 7 4] def
-	/138 [(74HC138) 8 4] def
-	/151 [(74HC151) 8 4] def
-	/154 [(74HC154) 12 4] def
-	/163 [(74HC163) 8 4] def
-	/181 [(74HC181) 12 6] def
-	/244 [(74HC244) 10 4] def
-	/374 [(74HC374) 10 4] def
-	/377 [(74HC377) 10 4] def
-	/010 [(27C010) 16 6] def
+	/00 [(74HC00) 4 std] def
+	/02 [(74HC00) 4 std] def
+	/04 [(74HC04) 4 [(1A) (1Y) (2A) (2Y) (3A) (3Y) (GND) (4Y) (4A) (5Y) (5A) (6Y) (6A) (VCC)]] def
+	/08 [(74HC08) 4 std] def
+	/14 [(74HC04) 4 [(1A) (1Y) (2A) (2Y) (3A) (3Y) (GND) (4Y) (4A) (5Y) (5A) (6Y) (6A) (VCC)]] def
+	/32 [(74HC32) 4 std] def
+	/86 [(74HC86) 4 std] def
+	/138 [(74HC138) 4 [(A0) (A1) (A2) (/G1) (/G2) (G3) (Q7) (GND) (Q6) (Q5) (Q4) (Q3) (Q2) (Q1) (Q0) (VCC)]] def
+	/151 [(74HC151) 4 [(D3) (D2) (D1) (D0) (Q) (/Q) (/OE) (GND) (A2) (A1) (A0) (D7) (D6) (D5) (D4) (VCC)]] def
+	/154 [(74HC154) 4 [(Q0) (Q1) (Q2) (Q3) (Q4) (Q5) (Q6) (Q7) (Q8) (Q9) (Q10) (GND) (Q11) (Q12) (Q13) (Q14) (Q15) (/G1) (/G2) (A3) (A2) (A1) (A0) (VCC)]] def
+	/163 [(74HC163) 4 [(/R) (CLK) (P0) (P1) (P2) (P3) (PE) (GND) (/LD) (TE) (Q3) (Q2) (Q1) (Q0) (CO) (VCC)]] def
+	/181 [(74HC181) 6 [(B0) (A0) (S3) (S2) (S1) (S0) (CIN) (M) (F0) (F1) (F2) (GND) (F3) (EQ) (/P) (Cout) (/G) (B3) (A3) (B2) (A2) (B1) (A1) (VCC)]] def
+	/244 [(74HC244) 4 [(/G1) (A0) (Q7) (A1) (Q6) (A2) (Q5) (A3) (Q4) (GND) (A4) (Q3) (A5) (Q2) (A6) (Q1) (A7) (Q0) (/G2) (VCC)]] def
+	/374 [(74HC374) 4 [(/OE) (Q0) (D0) (D1) (Q1) (Q2) (D2) (D3) (Q3) (GND) (CLK) (Q4) (D4) (D5) (Q5) (Q6) (D6) (D7) (Q7) (VCC)]] def
+	/377 [(74HC377) 4 [(/E) (Q0) (D0) (D1) (Q1) (Q2) (D2) (D3) (Q3) (GND) (CLK) (Q4) (D4) (D5) (Q5) (Q6) (D6) (D7) (Q7) (VCC)]] def
+	/010 [(27C010) 6 [(Vpp) (A16) (A15) (A12) (A7) (A6) (A5) (A4) (A3) (A2) (A1) (A0) (Q0) (Q1) (Q2) (GND) (Q3) (Q4) (Q5) (Q6) (Q7) (CE) (A10) (/G) (A11) (A9) (A8) (A13) (A14) (NC) (/P) (VCC)]] def
 end
-/Arial findfont 1 scalefont setfont
+/Arial findfont 0.8 scalefont /sml exch def
+/Arial findfont 1 scalefont /big exch def
 
 /bbox { gsave newpath 0 0 moveto false charpath flattenpath pathbbox grestore } def
+/rcent { gsave dup bbox 4 3 roll pop exch neg 3 1 roll add 2 div neg rmoveto show grestore } def
+/lcent { gsave dup bbox 4 3 roll pop exch pop 0 3 1 roll add 2 div neg rmoveto show grestore } def
+/cent { gsave dup bbox exch 4 1 roll add 2 div neg 3 1 roll add 2 div neg exch rmoveto show grestore } def
 /adj { 2 index add h exch sub 4 2 roll h exch sub 4 2 roll exch 3 index add exch } def
-/rect { 3 index 3 index moveto 1 index 3 index lineto 1 index 1 index lineto 3 index 1 index lineto closepath gsave 0.7 setgray fill grestore stroke pop pop pop pop } def
+/rect { 3 index 3 index moveto 1 index 3 index lineto 1 index 1 index neg lineto 3 index 1 index neg lineto closepath gsave 0.7 setgray fill grestore stroke pop pop pop pop } def
 /avg { 4 1 roll exch 4 1 roll add 2 div 3 1 roll add 2 div } def
-/comp { ics exch get aload pop 5 3 roll 4 2 roll adj 4 copy rect avg 3 2 roll dup bbox avg 5 3 roll 4 1 roll exch 4 1 roll exch sub 3 1 roll exch sub gsave moveto show grestore } def
-/comprot { ics exch get aload pop 5 3 roll 4 2 roll exch adj 4 copy rect avg 3 2 roll dup bbox exch avg 5 3 roll 4 1 roll exch 4 1 roll exch add 3 1 roll exch sub gsave moveto 90 rotate show grestore } def
-/row { { dup type /integertype eq { incx } { dup ics exch get aload pop x exch 2 div y exch sub 5 4 roll comp /x exch x add stx add def pop } ifelse } forall } def
-/rotrow { { dup type /integertype eq { incx } { dup ics exch get aload pop exch x exch 2 div y exch sub 5 4 roll comprot /x exch x add stx add def pop } ifelse } forall } def
+/str { ics exch get aload pop length 2 idiv exch } def
+/move { h exch sub translate } def
+/odd { 2 mod 0 ne } def
+/even { 2 mod 0 eq } def
+/oddexch { odd { exch } if } def
+/evenexch { even { exch } if } def
+/firsthalf { dup length 2 idiv 0 exch getinterval } def
+/secondhalf { dup length 2 idiv dup getinterval } def
+/halves { dup firsthalf exch secondhalf exch } def
+/comp {
+	sml setfont
+	gsave
+	4 2 roll move
+	exch
+	[
+		{
+			dup str exch 0.5 sub exch -0.5 0 4 2 roll rect pop
+			0.2 setgray dup str 2 div neg newpath -0.5 exch 0.5 270 90 arc stroke pop pop 0.0 setgray
+			dup str 2 div neg exch 2 div 0.5 sub exch moveto cent 
+			ics exch get aload pop 0 0 moveto 90 rotate gsave 1 index neg 0.25 add 0 rmoveto halves { lcent 0 -1 rmoveto } forall grestore dup length neg -0.25 exch rmoveto { 0 1 rmoveto rcent } forall pop pop
+		}
+		{
+			dup str exch 0.5 sub 0 0.5 4 2 roll rect pop
+			0.2 setgray dup str 2 div newpath 0.5 0.5 180 0 arc stroke pop pop 0.0 setgray
+			dup str 2 div exch 2 div 0.5 sub neg moveto gsave 90 rotate cent grestore
+			ics exch get aload pop 1 index 0 moveto gsave 1 index neg 0.15 add 0 rmoveto halves { lcent 0 -1 rmoveto } forall grestore dup length neg -0.25 exch rmoveto { 0 1 rmoveto rcent } forall pop pop
+		}
+		{
+			dup str exch 0.5 sub exch -0.5 0 4 2 roll rect pop
+			0.2 setgray dup str 2 div neg exch 0.5 sub exch newpath 0.5 90 270 arc stroke pop 0.0 setgray
+			dup str 2 div neg exch 2 div 0.5 sub exch moveto cent
+			ics exch get aload pop 0 0 moveto 90 rotate gsave 1 index neg 0.25 add 0 rmoveto halves exch { lcent 0 -1 rmoveto } forall grestore dup length neg -0.25 exch rmoveto { 0 1 rmoveto rcent } forall pop pop
+		}
+		{
+			dup str exch 0.5 sub 0 0.5 4 2 roll rect pop
+			0.2 setgray dup str 2 div exch 0.5 sub neg newpath 0.5 0 180 arc stroke pop 0.0 setgray
+			dup str 2 div exch 2 div 0.5 sub neg moveto gsave 90 rotate cent grestore
+			ics exch get aload pop 1 index 0 moveto gsave 1 index neg 0.15 add 0 rmoveto halves exch { lcent 0 -1 rmoveto } forall grestore dup length neg -0.25 exch rmoveto { 0 1 rmoveto rcent } forall pop pop
+		}
+	]
+	exch get exec
+	grestore
+} def
+%/row { { dup type /integertype eq { incx } { dup str stack x exch 2 div y exch sub 5 4 roll 0 exch comp /x exch x add stx add def pop } ifelse } forall } def
+/row { { dup /r eq { pop r 1 add 4 mod /r exch def } { dup /s eq { pop r 1 sub 4 mod /r exch def } { dup type /integertype eq { incx } { dup str r oddexch x exch 2 idiv y exch sub 5 4 roll r exch comp /x exch x add stx add def pop } ifelse } ifelse } ifelse } forall } def
 /con { gsave 4 2 roll h exch sub moveto exch rotate { gsave 0.4 0.4 rmoveto 0 -0.8 rlineto -0.8 0 rlineto 0 0.8 rlineto closepath fill grestore 0 -1 rmoveto } repeat grestore } def
-/rpins { gsave 4 2 roll h exch sub moveto exch rotate { gsave dup bbox exch pop add exch pop 0 exch -0.5 mul rmoveto show grestore 0 -1 rmoveto } forall grestore } def
-/lpins { gsave 4 2 roll h exch sub moveto exch rotate { gsave dup bbox -0.5 mul exch -1 mul exch rmoveto pop pop show grestore 0 -1 rmoveto } forall grestore } def
+/rpins { big setfont gsave 4 2 roll h exch sub moveto exch rotate { gsave dup bbox exch pop add exch pop 0 exch -0.5 mul rmoveto show grestore 0 -1 rmoveto } forall grestore } def
+/lpins { big setfont gsave 4 2 roll h exch sub moveto exch rotate { gsave dup bbox -0.5 mul exch -1 mul exch rmoveto pop pop show grestore 0 -1 rmoveto } forall grestore } def
 
 /stx 3 def
 /sty 8 def
 /y -2 def
-/newrow {/x 3 def /y y sty add def} def
+/newrow {/x 4 def /r 0 def /y y sty add def} def
 /incx { x add /x exch def } def
 /incy { y add /y exch def } def
 
