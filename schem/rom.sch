@@ -1368,6 +1368,7 @@ W = angled&lt;p&gt;
 <part name="GND1" library="supply1" deviceset="GND" device=""/>
 <part name="SV11" library="con-lstb" deviceset="MA08-1" device=""/>
 <part name="SV12" library="con-lstb" deviceset="MA06-1" device=""/>
+<part name="SV13" library="con-lstb" deviceset="MA06-1" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -1421,6 +1422,7 @@ W = angled&lt;p&gt;
 <instance part="GND1" gate="1" x="294.64" y="-7.62"/>
 <instance part="SV11" gate="1" x="-129.54" y="-12.7" rot="MR180"/>
 <instance part="SV12" gate="1" x="-101.6" y="-12.7" rot="MR180"/>
+<instance part="SV13" gate="1" x="-71.12" y="-12.7" rot="MR180"/>
 </instances>
 <busses>
 </busses>
@@ -1589,6 +1591,11 @@ W = angled&lt;p&gt;
 <wire x1="139.7" y1="22.86" x2="132.08" y2="22.86" width="0.1524" layer="91"/>
 <label x="132.08" y="22.86" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="SV13" gate="1" pin="1"/>
+<wire x1="-63.5" y1="-5.08" x2="-53.34" y2="-5.08" width="0.1524" layer="91"/>
+<label x="-63.5" y="-5.08" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="ST5" class="0">
 <segment>
@@ -1625,6 +1632,11 @@ W = angled&lt;p&gt;
 <pinref part="IC11" gate="A" pin="I1"/>
 <wire x1="139.7" y1="17.78" x2="132.08" y2="17.78" width="0.1524" layer="91"/>
 <label x="132.08" y="17.78" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="SV13" gate="1" pin="2"/>
+<wire x1="-63.5" y1="-7.62" x2="-53.34" y2="-7.62" width="0.1524" layer="91"/>
+<label x="-63.5" y="-7.62" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="ST6" class="0">
@@ -1663,6 +1675,11 @@ W = angled&lt;p&gt;
 <wire x1="139.7" y1="7.62" x2="132.08" y2="7.62" width="0.1524" layer="91"/>
 <label x="132.08" y="7.62" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="SV13" gate="1" pin="3"/>
+<wire x1="-63.5" y1="-10.16" x2="-53.34" y2="-10.16" width="0.1524" layer="91"/>
+<label x="-63.5" y="-10.16" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="ST7" class="0">
 <segment>
@@ -1699,6 +1716,11 @@ W = angled&lt;p&gt;
 <pinref part="IC11" gate="B" pin="I1"/>
 <wire x1="132.08" y1="2.54" x2="139.7" y2="2.54" width="0.1524" layer="91"/>
 <label x="132.08" y="2.54" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="SV13" gate="1" pin="4"/>
+<wire x1="-63.5" y1="-12.7" x2="-53.34" y2="-12.7" width="0.1524" layer="91"/>
+<label x="-63.5" y="-12.7" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="IN0" class="0">
@@ -2959,6 +2981,11 @@ W = angled&lt;p&gt;
 <pinref part="IC14" gate="E" pin="O"/>
 <wire x1="276.86" y1="7.62" x2="284.48" y2="7.62" width="0.1524" layer="91"/>
 <label x="276.86" y="7.62" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="SV13" gate="1" pin="5"/>
+<wire x1="-63.5" y1="-15.24" x2="-53.34" y2="-15.24" width="0.1524" layer="91"/>
+<label x="-63.5" y="-15.24" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="NX0" class="0">
