@@ -2064,12 +2064,9 @@ W = angled&lt;p&gt;
 <pinref part="IC6" gate="A" pin="8D"/>
 <wire x1="238.76" y1="76.2" x2="226.06" y2="76.2" width="0.1524" layer="91"/>
 <label x="226.06" y="76.2" size="1.778" layer="95"/>
-<pinref part="IC6" gate="A" pin="6D"/>
 <pinref part="IC6" gate="A" pin="7D"/>
-<wire x1="238.76" y1="78.74" x2="238.76" y2="81.28" width="0.1524" layer="91"/>
 <wire x1="238.76" y1="78.74" x2="238.76" y2="76.2" width="0.1524" layer="91"/>
 <junction x="238.76" y="76.2"/>
-<junction x="238.76" y="78.74"/>
 </segment>
 <segment>
 <pinref part="SV2" gate="1" pin="4"/>
@@ -2668,7 +2665,7 @@ W = angled&lt;p&gt;
 <label x="-63.5" y="15.24" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="RESET" class="0">
+<net name="RESET0" class="0">
 <segment>
 <pinref part="IC6" gate="A" pin="1D"/>
 <wire x1="238.76" y1="93.98" x2="226.06" y2="93.98" width="0.1524" layer="91"/>
@@ -2700,9 +2697,9 @@ W = angled&lt;p&gt;
 <label x="185.42" y="22.86" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="SV10" gate="1" pin="1"/>
-<wire x1="-30.48" y1="60.96" x2="-20.32" y2="60.96" width="0.1524" layer="91"/>
-<label x="-30.48" y="60.96" size="1.778" layer="95"/>
+<pinref part="IC6" gate="A" pin="6Q"/>
+<wire x1="264.16" y1="81.28" x2="271.78" y2="81.28" width="0.1524" layer="91"/>
+<label x="264.16" y="81.28" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="/IRQ" class="0">
@@ -3425,6 +3422,19 @@ W = angled&lt;p&gt;
 <pinref part="IC2" gate="A" pin="O0"/>
 <wire x1="81.28" y1="93.98" x2="88.9" y2="93.98" width="0.1524" layer="91"/>
 <label x="81.28" y="93.98" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="RESET" class="0">
+<segment>
+<pinref part="IC6" gate="A" pin="6D"/>
+<wire x1="238.76" y1="81.28" x2="226.06" y2="81.28" width="0.1524" layer="91"/>
+<label x="226.06" y="81.28" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="SV10" gate="1" pin="1"/>
+<wire x1="-30.48" y1="60.96" x2="-20.32" y2="60.96" width="0.1524" layer="91"/>
+<label x="-30.48" y="60.96" size="1.778" layer="95"/>
+<label x="-30.48" y="60.96" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>
