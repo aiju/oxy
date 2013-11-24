@@ -69,11 +69,11 @@ begin
   flags(5 downto 4) <= microdata(7 downto 6);
   ib <= microdata(11 downto 8);
   ob <= microdata(15 downto 12);
-  and1: entity work.hc08 port map(busack, microdata(16), pcp);
-  dp <= microdata(17);
-  alucin <= microdata(18);
-  wr <= microdata(19);
-  targ <= microdata(23 downto 20);
+  and1: entity work.hc08 port map(busack, microdata(20), pcp);
+  dp <= microdata(21);
+  alucin <= microdata(22);
+  wr <= microdata(23);
+  targ <= microdata(19 downto 16);
   flags(9 downto 8) <= microdata(25 downto 24);
   flags(7 downto 6) <= microdata(27 downto 26);
   flags(3 downto 2) <= microdata(29 downto 28);
