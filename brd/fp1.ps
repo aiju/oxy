@@ -3,8 +3,8 @@
 
 [/377 /244 /377 /244] row newrow
 [/244 /244] row newrow
-[/244 /244 /377 /08] row newrow
-[/2003 /2003 /2003 /14 /32] row newrow
+[/244 /244 /377 /14] row newrow
+[/r /r /2003 /2003 /2003 /r /r /08 /32] row newrow
 
 0 2 0 8 con -4 2 0 [(IB0) (IB1) (IB2) (IB3) (IB4) (IB5) (IB6) (IB7)] lpins
 0 16 0 6 con -4 16 0 [(VCC) (VCC) (CLK) (GND) (GND) (GND)] lpins
@@ -12,7 +12,17 @@
 58 2 0 8 con 62 2 0 [(OB0) (OB1) (OB2) (OB3) (OB4) (OB5) (OB6) (OB7)] rpins
 58 16 0 6 con 62 16 0 [(VCC) (VCC) (VCC) (GND) (GND) (GND)] rpins
 
+4 0 90 8 con 4 -2 90 [(/ACTV) (/DEP) (/DEPN) (/DEPN1) (SRESET) (SSINGLE) (/RESET1) (/WR)] rpins
+14 0 90 8 con 14 -2 90 [(SW0) (SW1) (SW2) (SW3) (SW4) (SW5) (SW6) (SW7)] rpins
+24 0 90 6 con 24 -2 90 [(/BOE) (/BWE)] rpins
+
 40 0 90 6 con 40 -2 90 [(BUSACK) (/BUSACK) (/BUSREQ) (/WE) (WR) (/IRQ)] rpins
 47 0 90 6 con 47 -2 90 [(RESET) (SYNC) (IBR0) (IBR1) (IBR2) (IBR3)] rpins
 
-24 37 90 8 con 24 39 90 [(IBS0) (IBS1) (IBS2) (IBS3) (IBD2) (IBD3) (OBD2) (OBD3)] lpins
+20 37 90 8 con 20 39 90 [(IBS0) (IBS1) (IBS2) (IBS3) (IBD2) (IBD3) (OBD2) (OBD3)] lpins
+
+34 36 90 10 con 34 39 90 [(IBLI) () () () (DBLI) () () ()] lpins
+34 37 90 10 con 34 42 90 [(...) () () () () () () ()] lpins
+
+48 36 90 10 con 48 39 90 [(REG) () () () () () () ()] lpins
+48 37 90 10 con 48 42 90 [(...) () () () () () () ()] lpins
