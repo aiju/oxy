@@ -2,6 +2,8 @@
 2.834646 2.834646 scale
 0.2 setlinewidth
 0 setgray
+170 30 translate
+90 rotate
 
 /bbox { gsave newpath 0 0 moveto false charpath flattenpath pathbbox grestore } def
 /rcent { gsave dup bbox 4 3 roll pop exch neg 3 1 roll add 2 div neg rmoveto show grestore } def
@@ -10,37 +12,38 @@
 /circ { 2 div 0 360 arc closepath stroke } def
 /Arial findfont 4 scalefont setfont
 
-/w 250 def
-/h 160 def
+/w 230 def
+/h 133 def
 0 0 moveto w 0 lineto w h lineto 0 h lineto closepath stroke
-/lsp w 0.05 mul def
+/lsp w 0.055 mul def
 /lbsp w 0.025 mul def
-/rend 16 lsp mul 4 lbsp mul add def
-/h1 0.45 def
-/h2 0.55 def
+/rend 15 lsp mul 3 lbsp mul add w add 2 div def
+/h1 0.63 def
+/h2 0.75 def
 /th 0.05 def
-/h0 0.25 def
+/h0 0.40 def
 /sh 0.15 def
-/sw 0.1 def
-/ss 30 def
-/su [(ON) (RESET) (SINGLE) (RUN) (EXAMINE) (DEPOSIT)] def
+/sw 0.18 def
+/ss 26 def
+/su [() (ON) (RESET) (SINGLE) (RUN) (EXAMINE) (DEPOSIT)] def
 /sl -10 def
-/sb [(OFF) () () (STOP) (NEXT) (NEXT)] def
+/sb [() (OFF) () () (STOP) (NEXT) (NEXT)] def
 /ns 7 def
 
 0 1 15 { 
 	dup dup dup 4 idiv lbsp mul exch lsp mul add rend exch sub
-	dup h1 h mul 5 circ
-	dup h2 h mul 5 circ
+%	dup h1 h mul 5 circ
+%	dup h2 h mul 5 circ
 	dup h1 th sub h mul moveto exch 20 string cvs cent stroke
 	dup h2 th add h mul moveto exch 8 mod 20 string cvs cent stroke
-	dup h0 h mul 6 circ
+%	dup h0 h mul 6 circ
 	pop
 } for
 
-8.5 lsp mul 2.5 lbsp mul add h1 th 2 mul sub h mul moveto (ADDRESS) cent stroke
-12.5 lsp mul 3.5 lbsp mul add h2 th 2 mul add h mul moveto (DATA) cent stroke
-4.5 lsp mul 1.5 lbsp mul add h2 th 2 mul add h mul moveto (REGISTER) cent stroke
+rend 7.5 lsp mul 1.5 lbsp mul add sub h1 th 2 mul sub h mul moveto (ADDRESS) cent stroke
+rend 3.5 lsp mul 0.5 lbsp mul add sub h2 th 2 mul add h mul moveto (DATA) cent stroke
+rend 11.5 lsp mul 2.5 lbsp mul add sub h2 th 2 mul add h mul moveto (REGISTER) cent stroke
 gsave sl sw th add h mul moveto su { ss 0 rmoveto gsave cent stroke grestore } forall grestore
-sl sw h mul ns { exch ss add exch 2 copy 6 circ } repeat pop pop
+%sl sw h mul ns { exch ss add exch 2 copy 6 circ } repeat pop pop
 gsave sl sw th sub h mul moveto sb { ss 0 rmoveto gsave cent stroke grestore } forall grestore
+showpage

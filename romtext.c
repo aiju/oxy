@@ -32,17 +32,17 @@ enum {
 enum {
 	VALALU = 0,
 	VALIFL = 6,
-	VALIB = 8,
-	VALOB = 12,
-	VALPCINC = 16,
-	VALDINC = 17,
-	VALCIN = 18,
-	VALWR = 19,
-	VALNEXT = 20,
-	VALNFL = 24,
-	VALVFL = 26,
-	VALZFL = 28,
-	VALCFL = 30,
+	VALNFL = 8,
+	VALVFL = 10,
+	VALZFL = 12,
+	VALCFL = 14,
+	VALNEXT = 16,
+	VALPCINC = 20,
+	VALDINC = 21,
+	VALCIN = 22,
+	VALWR = 23,
+	VALIB = 24,
+	VALOB = 28,
 	VALABL = 32,
 	VALABH = 35,
 };
@@ -63,6 +63,7 @@ Field fs[] = {
 	"N", 10,
 	"COND", 40,
 	"T", 10,
+	"RAW", 60,
 	"ALU", 50,
 	"IB", 20,
 	"OB", 20,
@@ -258,6 +259,7 @@ printu(int i, int j, int k, uint64_t u)
 	else
 		column(0, "%s", buf);
 	column(COURIER | CENTERED, "%.1x", CUT(u, VALNEXT, 4));
+	column(COURIER, "%.2x %.2x %.2x %.2x %.2x", ((uint32_t)(u>>32)&255), ((uint32_t)(u>>24)&255), ((uint32_t)(u>>16)&255), ((uint32_t)(u>>8)&255), ((uint32_t)u&255));
 	column(0, "%s", alu[CUT(u, VALALU, 6)]);
 	if(CUT(u, VALIB, 4) == 0)
 		column(STRIKE, "");
@@ -293,7 +295,7 @@ opcode(int i)
 	if(nrows + countlines(i) >= NLINES)
 		newpage(0);
 	end = 0;
-	for(j = 1; j < LASTOP && !end; j++){
+	for(j = 0; j < LASTOP && !end; j++){
 		a = (i << ADDRINSTR) | (j << ADDRSTATE);
 		memcpy(v, rom + a, (1<<CONDBITS)*sizeof(*v));
 		end = 1;
