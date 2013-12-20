@@ -12,10 +12,7 @@ XH	equ 9
 YL	equ 10
 YH	equ 11
 
-	org 0
-	hex 00
-
-	org $200,0
+	org $ff00,0
 prime	subroutine
 	lda #2
 	sta XL
@@ -58,6 +55,7 @@ prime	subroutine
 	sta AH
 	jsr putnum
 	lda #$A
+	jsr putc
 	sta $FF
 .5	clc
 	lda XL
@@ -84,7 +82,13 @@ putnum	subroutine
 .1	pla
 	clc
 	adc #$30
-	sta $FF
+	jsr putc
+	rts
+
+putc	subroutine
+.1	bit $FE15
+	bvc .1
+	sta $FE10
 	rts
 
 div	subroutine
@@ -147,5 +151,5 @@ div	subroutine
 
 
 	org $fffc,0
-	hex 0002
+	hex 00ff
 	hex 0000
