@@ -3,7 +3,7 @@
 	org $0,0
 n	equ 500
 m	equ 10*n/3+1
-cols	equ 32
+cols	equ 25
 i	ds 2
 j	ds 2
 q	ds 2
@@ -160,7 +160,7 @@ main	subroutine
 	bcc .7
 	bne .8
 	inc nn
-	jmp .l2
+	bne .13
 .8	lda #$30
 	sta .9+1
 	inc pd
@@ -180,7 +180,7 @@ main	subroutine
 	sta nn
 	lda q
 	sta pd
-	inc i
+.13	inc i
 	bne .11
 	inc i+1
 .11	lda i+1
